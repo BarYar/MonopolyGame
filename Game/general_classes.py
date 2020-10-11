@@ -79,13 +79,13 @@ class Location:
 """ Character class- each character has a picture a name and a location """
 
 
-class Character(Location,Size):
+class Character(Location, Size):
     # Constructor
     def __init__(self, name, picture, x=None, y=None):
         self.name = name
         self.picture = picture
-        Location.__init__(self,x, y)
-        Size.__init__(self, 15, 15)#Change for sqale!!!
+        Location.__init__(self, x, y)
+        Size.__init__(self, 15, 15)  # Change for sqale!!!
 
     # Set the name
     def setName(self, name):
@@ -150,18 +150,34 @@ class Character_List(root):
         return characters
 
 
+"""Houses class- 
+   parameters: 
+
+   attributes:             
+                1.hotels []- house (obj)
+                1.houses []- house (obj)
+
+   """
+
+
+class Houses:
+    # Constructor set the houses for a player (default value-3 Hotels, 5 Regular)
+    def __init__(self, amount=(5, 3)):
+        self.houses = [House(0) for i in range(amount(0))]  # Sets the regular houses
+        self.hotels = [House(1) for i in range(amount(1))]  # Sets the hotels
+
+
 """Player class- each player has a name, money, Character and houses[] """
 
 
-class Player(Location):
+class Player(Location, Houses):
     # Constructer- gets name,money ,character and location
     def __init__(self, name, money, character, x=0, y=0):
         self.name = name
         self.money = money
         self.character = character
-        self.hotels = []
-        self.houses = []
-        super().__init__(x, y)
+        Location.__init__(self, x, y)
+        Houses.__init__(self)
 
     # Set the name
     def setName(self, name):
@@ -173,7 +189,7 @@ class Player(Location):
 
     # Set the character
     def setCharacter(self, character):
-        self.character=character
+        self.character = character
 
     # Returns the name
     def getX(self):
@@ -187,21 +203,14 @@ class Player(Location):
     def getCharacter(self):
         return self.character
 
-    # Set the houses for a player (default value-3 Hotels, 5 Regular)
-    def setHouses(self,amount=(5,3)):
-        for i in range(amount(0)):#Sets the regular houses
-            self.houses.append(House(0))
-        for i in range(amount(1)):#Sets the hotels
-            self.hotels.append(House(1))
-
     # Reduce/Increase the money of a player
-    def money_transaction(self,price):
-        self.money=self.money+price
+    def money_transaction(self, price):
+        self.money = self.money + price
 
 
 """House class- 
    parameters: 
-                1.type:type- 0= regualr house, 1=hotel (int)
+                1.typ:typ- 0= regualr house, 1=hotel (int)
    attributes:             
                 1.location-location of the house can be none (Location)
                 2.inGame:True- the player is in game, False- the player is not in game(boolean)
@@ -213,19 +222,19 @@ class Player(Location):
 
 class House(Size):
     # Constructor
-    def __init__(self, type):
-        self.type=type
+    def __init__(self, typ):
+        self.typ = typ
         self.in_game = False
-        self.price_multiple = type + 0.9
-        self.location=None
-        if self.type == 0:
-            super().__init__(10, 30)#Change for sqale!!!
+        self.price_multiple = typ * 3.4 + 1
+        self.location = None
+        if self.typ == 0:
+            super().__init__(10, 30)  # Change for sqale!!!
         else:
-            super().__init__(13, 37)#Change for sqale!!!
+            super().__init__(13, 37)  # Change for sqale!!!
 
-    # Set the type -0/1
-    def setType(self, type):
-        self.type = type
+    # Set the typ -0/1
+    def setTyp(self, typ):
+        self.typ = typ
 
     # Set the player in_game param
     def setIn_game(self, in_game):
@@ -235,9 +244,9 @@ class House(Size):
     def setLocation(self, location):
         self.location = location
 
-    # Get the type -0/1
-    def getType(self):
-        return self.type
+    # Get the typ -0/1
+    def getTyp(self):
+        return self.typ
 
     # Get the player in_game param
     def getIn_game(self):
@@ -263,13 +272,16 @@ class House(Size):
    """
 
 
-class Square(Size,Location):
+class Square(Size, Location):
     # Constructor
     def __init__(self, city, street, land_price, x, y):
-        self.city=city
-        self.street=street
-        self.land_price=land_price
-        Size.__init__(self, 60, 60)#Change for sqale!!!
+        self.city = city
+        self.street = street
+        self.land_price = land_price
+        self.houses = []
+        self.hotel = None
+        self.card()
+        Size.__init__(self, 60, 60)  # Change for sqale!!!
         Location.__init__(self, x, y)
 
     # Set the city
@@ -284,6 +296,19 @@ class Square(Size,Location):
     def setLand_price(self, land_price):
         self.land_price = land_price
 
+    # Add the {houses} to self.houses
+    # parameters:
+    #               1.houses
+    def addHouses(self, houses):
+        for i in houses:
+            self.houses.append(i)
+
+    # Set the hotel to hotel
+    # parameters:
+    #               1.hotel
+    def addHotel(self, hotel):
+        self.hotel = hotel
+
     # Get the city
     def getCity(self):
         return self.city
@@ -296,13 +321,63 @@ class Square(Size,Location):
     def getLand_price(self):
         return self.land_price
 
-    # get the fine price for landing on the square
+    # Get the Houses
+    def getHouses(self):
+        return self.houses
+
+    # Remove all the houses from the list
+    # It will happen mostly when a player wants to upgrade to hotel
+    def clearHouses(self):
+        self.houses = []
+
+    # Remove all the houses and hotel from the object
+    # It will happen mostly when a player quit/ lost
+    def clearHouses_and_hotel(self):
+        self.houses = []
+        self.hotel = None
+
+    # Get the fine price for landing on the square
     def getFine_price(self):
+        sum_multiple = len(self.houses)
+        if self.hotel:  # Checks if hotel is in the square
+            sum_multiple = 4.4
+        return self.land_price * sum_multiple
 
+    # Get the fine or buying price
+    # Get the price of the square with {amount} of houses from {typ} type
+    # parameters:
+    #               1.amount (int)
+    #               2.typ 0/1 (int)
+    #               3.payment True/False(boolean
+    def get_buying_or_fine_price(self, amount, typ, payment):
+        sum_price = 0
+        payment_multiple = 1
+        if payment:
+            payment_multiple = 1.7
+        if type(amount) == int and type(typ) == int:
+            if amount > 0:
+                if typ == 0:
+                    if amount < 4:
+                        sum_price = amount * self.land_price * payment_multiple
+                    else:
+                        raise ValueError("Invalid amount for house")
+                elif typ == 1:
+                    if amount < 1:
+                        sum_price = self.land_price * 4.4 * payment_multiple * 1.15
+                    else:
+                        raise ValueError("Invalid amount for hotel")
+                else:
+                    raise ValueError("Invalid typ number")
+        else:
+            raise TypeError(f"Yo've entered a {type(typ)} type- non int type")
+        return sum_price
 
-
-
-
-
-
-
+    # Get the square card -payment and fine price for each of the available houses.
+    # buying[0]-list of all the houses buying price, buying [1] - buying price of the hotel.
+    # fines[0]-list of all the houses fines price, buying [1] - fines price of the hotel.
+    def card(self):
+        self.buying = [self.get_buying_or_fine_price(i, 0, True) for i in range(1,5)]
+        self.buying.append(self.get_buying_or_fine_price(1, 1, True))
+        self.fines = [self.get_buying_or_fine_price(i, 0, False) for i in range(1,5)]
+        self.fines.append(self.get_buying_or_fine_price(1, 1, False))
+        return self.buying, self.fines
