@@ -5,7 +5,6 @@ import tkinter as tk
 import ctypes
 user32 = ctypes.windll.user32
 screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
-ratio=
 window = tk.Tk()
 # welcome = tk.Label(bg="black")
 # welcome.place(relx=0, rely=0, relheight=0.17, relwidth=0.17)
