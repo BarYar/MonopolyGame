@@ -1,7 +1,14 @@
 import os
 import random
 
-"""class with the root location-for pictures and files"""
+""" root class-
+    parameters: 
+
+   attributes:             
+                1.project_root- the path of the project (string) 
+                2.project_files_root- the path of the files directory of the project,
+                 the pictures and the text files of this project are in this directory.(string)  
+    """
 
 
 class root:
@@ -11,12 +18,18 @@ class root:
         self.project_files_root = f'{self.project_root}\Files'
 
 
-""" size of on object- for on screen objects"""
+""" Size class-
+    parameters: 
+                1.height- the height of an object (float) 
+                2.length- the length of an object (float) 
+   attributes:             
+                
+    """
 
 
 class Size(root):
     # Constructor
-    def __init__(self, height, length):
+    def __init__(self, height=None, length=None):
         self.height = height
         self.length = length
         super().__init__()
@@ -46,7 +59,13 @@ class Size(root):
         return f'His Height is: {self.height}, his length is: {self.length}'
 
 
-""" location of on object- for on screen objects"""
+""" Location class-
+    parameters: 
+                1.x- the x axis location of an object (float) 
+                2.y- the y axis location of an object (float) 
+   attributes:             
+                
+    """
 
 
 class Location:
@@ -76,7 +95,16 @@ class Location:
         return f'His x is: {self.x}, his y is: {self.y}'
 
 
-""" Character class- each character has a picture a name and a location """
+""" Character class-
+    parameters: 
+                1.name- The name of the character (string) 
+                2.picture- The picture of the character location (string) 
+                3.x (float) - default value=None
+                4.y (float) - default value=None
+   attributes:             
+                1.height (int)
+                2.weight (int)
+    """
 
 
 class Character(Location, Size):
@@ -109,7 +137,14 @@ class Character(Location, Size):
 
 
 """ Character_List class-
-    holds a list of all the available characters"""
+    parameters: 
+                
+   attributes:             
+                1.names- List of all the available character names (List(string))
+                2.pictures- List of all of the pictures locations(List(string))
+                3.characters- List of all of the characters, 
+                 this list composed by the names and pictures (List(Character(obj)))
+    """
 
 
 class Character_List(root):
@@ -148,64 +183,6 @@ class Character_List(root):
         for i in range(amount):
             characters.append(self.get_character(self.names[random.randint(len(self.names))]))
         return characters
-
-
-"""Houses class- 
-   parameters: 
-
-   attributes:             
-                1.hotels []- house (obj)
-                1.houses []- house (obj)
-
-   """
-
-
-class Houses:
-    # Constructor set the houses for a player (default value-3 Hotels, 5 Regular)
-    def __init__(self, amount=(5, 3)):
-        self.houses = [House(0) for i in range(amount(0))]  # Sets the regular houses
-        self.hotels = [House(1) for i in range(amount(1))]  # Sets the hotels
-
-
-"""Player class- each player has a name, money, Character and houses[] """
-
-
-class Player(Location, Houses):
-    # Constructer- gets name,money ,character and location
-    def __init__(self, name, money, character, x=0, y=0):
-        self.name = name
-        self.money = money
-        self.character = character
-        Location.__init__(self, x, y)
-        Houses.__init__(self)
-
-    # Set the name
-    def setName(self, name):
-        self.name = name
-
-    # Set the money
-    def setMoney(self, money):
-        self.money = money
-
-    # Set the character
-    def setCharacter(self, character):
-        self.character = character
-
-    # Returns the name
-    def getX(self):
-        return self.name
-
-    # Returns the money
-    def getY(self):
-        return self.money
-
-    # Returns the character
-    def getCharacter(self):
-        return self.character
-
-    # Reduce/Increase the money of a player
-    def money_transaction(self, price):
-        self.money = self.money + price
 
 
 """House class- 
@@ -257,11 +234,107 @@ class House(Size):
         return self.price_multiple
 
 
+"""Houses class- 
+   parameters: 
+
+   attributes:             
+                1.hotels - The player's hotels (List(House (obj)))
+                1.houses - The player's regular houses (List(House (obj)))
+
+   """
+
+
+class Houses:
+    # Constructor set the houses for a player (default value-3 Hotels, 5 Regular)
+    def __init__(self, amount=(5, 3)):
+        self.houses = [House(0) for i in range(amount(0))]  # Sets the regular houses
+        self.hotels = [House(1) for i in range(amount(1))]  # Sets the hotels
+
+
 """Square class- 
    parameters: 
-                1.city (string)
-                2.street (string)
-                3.land_price (int)
+                1.name - The player name (string)
+                2.money - The player money (float) - can't be negative
+                3.character- The player character (Character(obj))
+                4.x(int) -optional
+                5.y(int) -optional
+   attributes:             
+                1.jail- True- the player is in jail
+                 False- the player is'nt in jail (boolean)
+                
+   """
+
+
+class Player(Location, Houses):
+    # Constructor- gets name,money ,character and location
+    def __init__(self, name, money, character, x=0, y=0):
+        self.name = name
+        self.money = money
+        self.character = character
+        self.jail = False
+        Location.__init__(self, x, y)
+        Houses.__init__(self)
+
+    # Set the name
+    def setName(self, name):
+        self.name = name
+
+    # Set the money
+    def setMoney(self, money):
+        self.money = money
+
+    # Set the character
+    def setCharacter(self, character):
+        self.character = character
+
+    # Set the jail parameter to True/False
+    def setJail(self, jail):
+        self.jail = jail
+
+    # Returns the name
+    def getX(self):
+        return self.name
+
+    # Returns the money
+    def getY(self):
+        return self.money
+
+    # Returns the character
+    def getCharacter(self):
+        return self.character
+
+    # Returns if the player is in jail
+    def isIn_jail(self):
+        return self.jail
+
+    # Reduce/Increase the money of a player
+    def money_transaction(self, price):
+        self.money = self.money + price
+
+
+"""Square class- 
+   parameters: 
+                1.x(int)
+                2.y(int)
+   attributes:             
+                1.height(int)
+                2.length(int)
+
+   """
+
+
+class Square(Size, Location):
+    # Constructor
+    def __init__(self, x, y):
+        Size.__init__(self)  # Change for sqale!!!
+        Location.__init__(self, x, y)
+
+
+"""Street class- 
+   parameters: 
+                1.city - The city of the square- if it's a special square, this will be the square title (string)
+                2.street - The address of the square- if it's a special square, this will be the square details (string)
+                3.land_price - The land price of the square- if it's a special square, it's value = 0 (int)
                 4.x(int)
                 5.y(int)
    attributes:             
@@ -272,7 +345,7 @@ class House(Size):
    """
 
 
-class Square(Size, Location):
+class Street(Square):
     # Constructor
     def __init__(self, city, street, land_price, x, y):
         self.city = city
@@ -281,8 +354,7 @@ class Square(Size, Location):
         self.houses = []
         self.hotel = None
         self.card()
-        Size.__init__(self, 60, 60)  # Change for sqale!!!
-        Location.__init__(self, x, y)
+        Square.__init__(self, x, y)
 
     # Set the city
     def setCity(self, city):
@@ -381,3 +453,67 @@ class Square(Size, Location):
         self.fines = [self.get_buying_or_fine_price(i, 0, False) for i in range(1,5)]
         self.fines.append(self.get_buying_or_fine_price(1, 1, False))
         return self.buying, self.fines
+
+
+"""Jail class- 
+   parameters: 
+                1. x (float)
+                2. y (float)
+   attributes:             
+                1.players (List(Player(obj))
+                2.height(int)
+                3.length(int)
+
+   """
+
+
+class Jail(Square):
+    # Constructor
+    def __init__(self, x, y):
+        Square.__init__(self, x, y)
+        self.players= []
+
+    # Adds player to players list
+    def addPlayer(self, player):
+        self.players.append(player)
+
+    # Remove player from the players list
+    def removePlayer(self, player):
+        for i in range(len(self.players)):
+            if i.getName() == player.getName():
+                self.players.remove(self.players[i])
+
+
+"""Squares class- 
+   parameters: 
+                
+   attributes:             
+                1.squares []- Square (obj)
+                
+   """
+
+
+class Squares(root):
+    # Constructor
+    def __init__(self):
+        self.squares=[]
+        x = False  # var for the axis of change
+        for i in range(6):
+            with open("../Files/Cities/Tel-Aviv.txt", "r") as text:  # The text files that contains Tel-Aviv details
+                words=text.read().split()  # Getting it's values
+                self.squares.append(Square("Tel-Aviv", words[i*2], int(words[i*2+1]), -10-i*120, 10))  # Scaling!
+            with open("../Files/Cities/Jerusalem.txt", "r") as text:  # The text files that contains Jerusalem details
+                words = text.read().split()  # Getting it's values
+                self.squares.append(Square("Jerusalem", words[i*2], int(words[i*2+1]), -10 - i * 120, 10))  # Scaling!
+            if i < 4:
+                with open("../Files/Cities/Haifa.txt", "r") as text:  # The text files that contains Haifa details
+                    words = text.read().split()  # Getting it's values
+                    self.squares.append(Square("Haifa", words[i*2], int(words[i*2 + 1]), -10, 130 + i * 120))  # Scaling!
+                with open("../Files/Cities/Beer-Sheva.txt", "r") as text:  # The text files that contains Beer-Sheva details
+                    words = text.read().split()  # Getting it's values
+                    self.squares.append(Square("Beer-Sheva",  words[i*2], int(words[i*2 + 1]), -610, 130 + i * 120))  # Scaling!
+        super().__init__()
+        
+    # Get the squares list
+    def getSquares(self):
+        return self.squares
