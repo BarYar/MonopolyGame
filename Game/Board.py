@@ -120,8 +120,8 @@ class Board(Root):
     def left(self):
         return 0, 0, 1, 0.125, 0.875, 0
 
-    # Square details
-    def draw_squares(self):
+    # Create the board squares
+    def create_squares(self):
         for j in range(4):
             if j % 2 == 0:
                 if j == 0:
@@ -140,4 +140,4 @@ class Board(Root):
 
 if __name__ == "__main__":
     board = Board()
-    board.draw_squares()
+    board.create_squares()
