@@ -179,7 +179,7 @@ class Mygame(Board):
         self.newGame()
         self.in_turn = True
         self.in_game = True
-        self.players = ["", "", "", ""]
+        self.players = ["", "", "", "" ]
         while self.in_game:
             self.setRoll_dice_enabled()
             self.window.mainloop()
