@@ -157,7 +157,8 @@ class Board(Root):
                     self.uneven_lines(j)
         self.board.place(x=0, y=0)
         self.window.attributes("-fullscreen", True)
-        self.window.mainloop()
+        # For testing
+        # self.window.mainloop()
 
 
 if __name__ == "__main__":

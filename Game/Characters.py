@@ -1,7 +1,7 @@
-from Game.Root import Root
-from Game.Character import Character
 import os
-
+import random
+from Game.Character import Character
+from Game.Root import Root
 
 """ Character_List class-
     parameters: 
@@ -17,11 +17,12 @@ import os
 class Characters(Root):
     # Constructor
     def __init__(self):
+        super().__init__()
         self.names = ["Superman", "Ironman", "Spiderman", "Batman", "Wonder Woman",
                       "Deadpool"]  # List of all of the character names
         self.pictures = os.listdir(f'{self.project_files_root}\Characters')
         self.characters = [Character(self.names[i], self.pictures[i]) for i in range(6)]
-        super().__init__()
+
 
     # Returns The available characters
     def get_available_characters(self):
