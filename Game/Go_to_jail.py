@@ -18,5 +18,5 @@ from Game.Square import Square
 
 class Go_to_jail(Square):
     # Constructor
-    def __init__(self, picture, x, y):
-        Square.__init__(self, picture, x, y, 0.11, 0.16)  # Change for ratio!!!
+    def __init__(self, frame):
+        Square.__init__(self, frame)

@@ -23,14 +23,13 @@ from Game.Square import Square
 
 class Street(Square):
     # Constructor
-    def __init__(self, city, street, land_price, picture, x, y):
+    def __init__(self,  frame, city=None, street=None, land_price=None):
         self.city = city
         self.street = street
         self.land_price = land_price
         self.houses = []
         self.hotel = None
-        self.card()
-        Square.__init__(self, picture, x, y, 0.11, 0.8)  # Change for ratio!!!
+        Square.__init__(self, frame)  # Change for ratio!!!
 
     # Set the city
     def setCity(self, city):
@@ -105,12 +104,12 @@ class Street(Square):
         if type(amount) == int and type(typ) == int:
             if amount > 0:
                 if typ == 0:
-                    if amount < 4:
+                    if amount <= 4:
                         sum_price = amount * self.land_price * payment_multiple
                     else:
                         raise ValueError("Invalid amount for house")
                 elif typ == 1:
-                    if amount < 1:
+                    if amount == 1:
                         sum_price = self.land_price * 4.4 * payment_multiple * 1.15
                     else:
                         raise ValueError("Invalid amount for hotel")

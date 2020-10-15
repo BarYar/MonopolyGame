@@ -14,7 +14,7 @@ from Game.Root import Root
 
 class Displayable(Root):
     # Constructor
-    def __init__(self, height=None, width=None, x=None, y= None):
+    def __init__(self, height=None, width=None, x=None, y=None):
         self.height = height
         self.width = width
         self.x = x

@@ -2,7 +2,7 @@ Eilat Hatmarim 70 brown
 Eilat Hadekel 70 brown
 Beer-Sheva David 95 navy
 Beer-Sheva Jerusalem 110 navy
-Beer-Sheva HaTsanhanim 120 navy
+Beer-Sheva Egoz 120 navy
 Beer-Sheva Agranat 140 navy
 Jerusalem Mea-Sheaarim 95 yellow
 Jerusalem Uruguay 110 yellow

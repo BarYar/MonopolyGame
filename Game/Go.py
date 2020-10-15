@@ -21,8 +21,8 @@ from Game.Square import Square
 
 class Go(Square):
     # Constructor
-    def __init__(self, picture, x, y):
-        Square.__init__(self, picture, x, y, 0.22, 0.16)  # Change for ratio!!!
+    def __init__(self, frame):
+        Square.__init__(self, frame)  # Change for ratio!!!
         self.passing_through_go = 200
         self.landing_on_go = 400
 

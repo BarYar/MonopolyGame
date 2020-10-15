@@ -3,6 +3,11 @@ import ctypes
 from tkinter import font
 import os
 from Game.Root import Root
+from Game.Street import Street as ST
+from Game.Go import Go
+from Game.Go_to_jail import Go_to_jail as GTJ
+from Game.Free_parking import Free_parking as FP
+from Game.Jail import Jail as JA
 
 
 """Board class- 
@@ -45,14 +50,20 @@ class Board(Root):
             special_square_loc = 6  # The location of the special square
         for i in range(7):  # This line's squares loop
             if i == special_square_loc:  # Special square
-                self.squares.append(tk.Frame(self.board, height=int(self.screen_height / 5),
-                                             width=int(self.screen_height / 5), bg="gold", highlightthickness=True))
-                self.squares[len(self.squares) - 1].place(x=x, y=y)
+                if special_square_loc == 6:
+                    self.squares.append(FP(tk.Frame(self.board, height=int(self.screen_height / 5),
+                                                    width=int(self.screen_height / 5),
+                                                    bg="gold", highlightthickness=True)))
+                else:
+                    self.squares.append(Go(tk.Frame(self.board, height=int(self.screen_height / 5),
+                                                    width=int(self.screen_height / 5),
+                                                    bg="gold", highlightthickness=True)))
+                self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
                 x = x + self.screen_height/5
             else:  # Normal square
-                self.squares.append(tk.Frame(self.board, height=int(self.screen_height/5),
-                                             width=int(self.screen_height/10), bg="white", highlightthickness=True))
-                self.squares[len(self.squares) - 1].place(x=x, y=y)
+                self.squares.append(ST(tk.Frame(self.board, height=int(self.screen_height/5),
+                                                width=int(self.screen_height/10), bg="white", highlightthickness=True)))
+                self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
                 if j == 0:
                     self.square_details(self.up())
                 else:
@@ -73,14 +84,21 @@ class Board(Root):
             special_square_loc = 6  # The location of the special square
         for i in range(7):  # This line's squares loop
             if i == special_square_loc:  # Special square
-                self.squares.append(tk.Frame(self.board, height=int(self.screen_height / 5),
-                                             width=int(self.screen_height / 5), bg="gold", highlightthickness=True))
-                self.squares[len(self.squares) - 1].place(x=x, y=y)
+                if special_square_loc == 6:
+                    self.squares.append(GTJ(tk.Frame(self.board, height=int(self.screen_height / 5),
+                                                     width=int(self.screen_height / 5),
+                                                     bg="gold", highlightthickness=True)))
+                else:
+                    self.squares.append(JA(tk.Frame(self.board, height=int(self.screen_height / 5),
+                                                    width=int(self.screen_height / 5),
+                                                    bg="gold", highlightthickness=True)))
+                self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
                 y = y + self.screen_height / 5
             else:  # Normal square
-                self.squares.append(tk.Frame(self.board, height=int(self.screen_height / 10),
-                                             width=int(self.screen_height / 5), bg="white", highlightthickness=True))
-                self.squares[len(self.squares) - 1].place(x=x, y=y)
+                self.squares.append(ST(tk.Frame(self.board, height=int(self.screen_height / 10),
+                                                width=int(self.screen_height / 5),
+                                                bg="white", highlightthickness=True)))
+                self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
                 if j == 1:
                     self.square_details(self.right())
                 else:
@@ -91,13 +109,17 @@ class Board(Root):
     # Square details creator
     def square_details(self, func):
         x, y, color_height, color_width, color_x, color_y = func
-        city = tk.Label(self.squares[len(self.squares) - 1], font=("Times", "13", "italic bold"),
+        city = tk.Label(self.squares[len(self.squares) - 1].getFrame(), font=("Times", "13", "italic bold"),
                         text=self.words[self.loc], bg="white")
         city.place(relheight=0.125, relwidth=1, relx=x, rely=y)
-        street_and_price = tk.Label(self.squares[len(self.squares) - 1], font=("David", "12"),
+        self.squares[len(self.squares) - 1].setCity(self.words[self.loc])
+        street_and_price = tk.Label(self.squares[len(self.squares) - 1].getFrame(), font=("David", "12"),
                                     text=f'{self.words[self.loc+1]} {self.words[self.loc+2]}₪', bg="white")
         street_and_price.place(relheight=0.125, relwidth=1, relx=x, rely=y+0.125)
-        square_color = tk.Label(self.squares[len(self.squares) - 1], bg=self.words[self.loc+3])
+        self.squares[len(self.squares) - 1].setStreet(self.words[self.loc+1])
+        self.squares[len(self.squares) - 1].setLand_price(int(self.words[self.loc + 2]))
+        self.squares[len(self.squares) - 1].card()  # Creates the card for the square
+        square_color = tk.Label(self.squares[len(self.squares) - 1].getFrame(), bg=self.words[self.loc+3])
         square_color.place(relheight=color_height, relwidth=color_width, relx=color_x, rely=color_y)
 
     # Square details of the up line
@@ -141,3 +163,4 @@ class Board(Root):
 if __name__ == "__main__":
     board = Board()
     board.create_squares()
+

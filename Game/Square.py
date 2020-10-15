@@ -3,11 +3,11 @@ from Game.Displayable import Displayable
 
 """Square class- 
    parameters: 
-                1. x(int)
-                2 .y(int)
-                3. picture- path to the picture of the square (string)
-                4. height(int)
-                5. width(int)
+                1. picture- The frame of the square (Tkinter(obj))
+                2.height- the height of an object (float) 
+                3.width- the width of an object (float) 
+                4.x- the x axis location of an object (float) 
+                5.y- the y axis location of an object (float) 
    attributes:             
                 1. characters []- list of the characters that are on this square (List(Character(obj)))
    """
@@ -15,18 +15,18 @@ from Game.Displayable import Displayable
 
 class Square(Displayable):
     # Constructor
-    def __init__(self, picture, x, y, height, width):
-        self.picture = picture
-        Displayable.__init__(self, height, width, x, y)  # Change for ratio!!!
+    def __init__(self, frame):
+        self.frame = frame
         self.characters = []
+        super().__init__()
 
-    # Sets the picture path
-    def setPicture(self, picture):
-        self.picture = picture
+    # Sets the frame
+    def setFrame(self, frame):
+        self.frame = frame
 
-    # Get the picture path
-    def getPicture(self):
-        return self.picture
+    # Get the frame
+    def getFrame(self):
+        return self.frame
 
     # Adds character to characters list
     def addCharacter(self, player):

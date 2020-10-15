@@ -18,6 +18,6 @@ from Game.Square import Square
 
 class Free_parking(Square):
     # Constructor
-    def __init__(self, picture, x, y):
+    def __init__(self, frame):
         self.turns = 2
-        Square.__init__(self, picture, x, y, 0.11, 0.16)  # Change for ratio!!!
+        Square.__init__(self, frame)

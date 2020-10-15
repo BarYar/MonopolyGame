@@ -1,15 +1,26 @@
 """
 Missions for tomorrow:
-1.Sort the design diagram for the project, these are the important changes:
-    a. The union of the classes: Size, Location to one class- Displayable (change the relevant inheritance classes).
-    b. The player class is now inheriting from the Character class.
-    c. Square is now inheriting to three classes: 1) City 2) Jail 3) Go.
-    d. Cancellation of the board class.
-    e. Adding general_buttons attribute to Game_Screen class.
-    g. Update some getters and setters names.
-2. Change the squares the layout in the Squares class.
-3. Diagram of the "board view"
-4. Scaling the displayable objects.
-5. Start working on the Board class.
+    1) Locate the players function- get by winfo.reqheight().
+    2) Add functions in myGame class for the special squares.
+    3) Update the diagram.
+
+
+"""
+
+
+"""
+
+
+Near future update ideas:
+    1) Add a Lucky box squares.
+    2) Add a trivia square - if you win the trivia question you get 200₪  if you lose you lose 100₪.
+
+
+Far future updates ideas:
+    1) Creating a stock market which each player money invested in it, this feature can add  a lot of 
+       levels of complexity to the game.
+    2) The stock market's stocks can go up and down drastically and randomly.
+    3) Add a newspaper that creates articles that can give hints to the stock market changes.
+
 
 """
