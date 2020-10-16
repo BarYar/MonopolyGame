@@ -33,13 +33,10 @@ class Board(Root):
         user32 = ctypes.windll.user32
         self.screen_width = user32.GetSystemMetrics(0)
         self.screen_height = user32.GetSystemMetrics(1)
-        self.window = tk.Tk()
-        self.board = tk.Frame(self.window, height=self.screen_height, width=self.screen_height)
         self.squares = []
         self.loc = 0  # Pointer for the words
         with open(f'{self.project_files_root}\Cities\Cities.txt', "r") as text:  # Squares details
             self.words = text.read().split()  # Getting it's value
-        self.loadPictures()
 
     # Get the screen_height
     def getScreen_height(self):
@@ -144,6 +141,8 @@ class Board(Root):
                                                     image=self.go_pic, highlightthickness=True,
                                                     bg="DarkSeaGreen1")))
                 self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
+                self.squares[i].setX(x)
+                self.squares[i].setY(y)
                 x = x + self.screen_height / 5
             else:  # Normal square
                 self.squares.append(ST(tk.Frame(self.board, height=int(self.screen_height / 5),
@@ -154,8 +153,11 @@ class Board(Root):
                     self.square_details(self.up())
                 else:
                     self.square_details(self.down())
+                self.squares[i].setX(x)
+                self.squares[i].setY(y)
                 x = x + self.screen_height / 10
                 self.loc += 4
+
 
     # Even lines creator
     def uneven_lines(self, j):
@@ -180,6 +182,8 @@ class Board(Root):
                                                     width=int(self.screen_height / 5),
                                                     image=self.jail_pic, highlightthickness=True, bg="DarkSeaGreen1")))
                 self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
+                self.squares[i].setX(x)
+                self.squares[i].setY(y)
                 y = y + self.screen_height / 5
             else:  # Normal square
                 self.squares.append(ST(tk.Frame(self.board, height=int(self.screen_height / 10),
@@ -190,6 +194,8 @@ class Board(Root):
                     self.square_details(self.right())
                 else:
                     self.square_details(self.left())
+                self.squares[i].setX(x)
+                self.squares[i].setY(y)
                 y = y + self.screen_height / 10
                 self.loc += 4
 
@@ -231,6 +237,10 @@ class Board(Root):
 
     # Create the board squares
     def create_board(self):
+        # Methods for creation of the board
+        self.window = tk.Tk()  # Create the window of the game
+        self.board = tk.Frame(self.window, height=self.screen_height, width=self.screen_height)  # Create the board
+        self.loadPictures()
         for j in range(4):
             if j % 2 == 0:
                 if j == 0:
@@ -242,7 +252,6 @@ class Board(Root):
                     self.uneven_lines(j)
                 else:
                     self.uneven_lines(j)
-        # Methods for creation of the board
         self.board.place(x=0, y=0)
         self.setIcon_window()
         self.createTitle()

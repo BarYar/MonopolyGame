@@ -44,7 +44,6 @@ class Mygame(Board):
         self.in_turn = False
         self.buttons = []
         self.players_quantity = 0
-        self.loadPictures()
 
     # Get the game_money
     def getGame_money(self):
@@ -81,7 +80,8 @@ class Mygame(Board):
     # Adds the player to the players list, from the start screen
     def addPlayer(self):
         char = self.characters.getRandom_character()
-        self.players.append(Player(self.name_entry.get(), self.game_money, char[0], char[1]))
+        self.players.append(Player(self.name_entry.get(), self.game_money, char))
+        self.name_entry.delete(0, 'end')
         if self.players_quantity == len(self.players):
             self.destroyWindow(self.start_screen)
 
@@ -100,38 +100,45 @@ class Mygame(Board):
     # Start new game
     def newGame(self):
         self.startScreen()
-        self.players_personal_information()
         self.create_board()
         self.create_players_frame()
         self.createButtons()
         self.locatePlayers()
 
     # The players enter their names and choose their character
-    def players_personal_information(self):
+    # This method is being called by the start screen buttons
+    def players_personal_information(self, players_quantity):
+        print(players_quantity)
+        self.setPlayers_quantity(players_quantity)
         height = self.getScreen_height()
-        for button in self.buttons:
+        for button in self.start_buttons:
             button.destroy()
         self.name_entry = tk.Entry(self.start_screen)
-        self.name_entry.place(x=0.1 * height, y=0.11 * height, height=0.02 * height, width=0.15 * height)  # Name entry
-        tk.Label(self.start_screen, font=("Times", "10", "bold"), text="Name:")  # Name label
-        tk.Button(self.start_screen, font=("Times", "10", "bold"), text="Enter", command=self.addPlayer)
+        self.name_entry.place(x=0.04 * height, y=0.11 * height, height=0.02 * height, width=0.15 * height)  # Name entry
+        tk.Label(self.start_screen, font=("Times", "10", "bold"), text="Name:", bg="white")\
+            .place(x=0, y=0.11 * height, height=0.02 * height, width=0.03 * height)  # Name label
+        tk.Button(self.start_screen, font=("Times", "10", "bold"),
+                  text="Enter", command=self.addPlayer, bg="DarkSeaGreen1")\
+            .place(x=0.1*height, y=0.15 * height, height=0.02 * height, width=0.03 * height)  # Enter button
 
     # The start screen - welcome label and buttons for choosing players quantity
     def startScreen(self):
         height = self.getScreen_height()
         self.start_screen = tk.Tk()
+        self.loadPictures()  # Load the pictures
         self.start_screen.geometry(f"{str(int(height / 4))}x{str(int(height / 4))}")
-        self.start_screen.iconbitmap(self.getIcon())  # Set the icon for the windoww
+        self.start_screen.iconbitmap(self.getIcon())  # Set the icon for the window
         self.start_screen.title("Monopoly")  # The screen title
         self.start_label = tk.Label(self.start_screen,
                                     text="Welcome to the Monopoly Game\nChoose this game players quantity.",
                                     font=("Times", "15", "bold"), bg="white").place(x=0, y=0)  # The screen label
         self.start_screen.configure(bg="white")
+        self.start_buttons = []
         for i in range(3):  # Adding the quantity buttons
-            self.start_buttons = []
             self.start_buttons.append(tk.Button(self.start_screen, text=str(i+2), font=(None, 16, 'bold'),
-                                                command=self.setPlayers_quantity(i+1), bg="DarkSeaGreen1"))
-            self.start_buttons[i].place(x=(i * 0.0625+0.035) * height, y=0.11 * height,height=0.03 * height,
+                                                command=lambda: self.players_personal_information(i+2)
+                                                , bg="DarkSeaGreen1"))
+            self.start_buttons[i].place(x=(i * 0.0625+0.035) * height, y=0.11 * height, height=0.03 * height,
                                         width=0.05 * height)
         self.start_screen.mainloop()
 
@@ -145,10 +152,10 @@ class Mygame(Board):
         width = self.getScreen_width()
         self.players_frames = []
         self.players_cards_frames = []
-        for i in range(len(self.players)):
-            self.players_frames.append(tk.Frame(self.getWindow(), bg="white"))
-            self.players_frames[i].place(x=width - height, y=(height/ self.players_quantity)*i,
-                                        height=height/self.players_quantity, witdth=width - height)
+        for i in range(self.players_quantity):
+            self.players_frames.append(tk.Frame(self.getWindow(), bg="white", highlightthickness=True))
+            self.players_frames[i].place(x=height, y=(height / self.players_quantity)*i,
+                                        height=height/self.players_quantity, width=width - height)
             self.players_frame_details(i)
 
     # Players frame details
@@ -206,8 +213,9 @@ class Mygame(Board):
     def roll_dice(self):
         result1 = random.randint(1, 6)
         result2 = random.randint(1, 6)
-        self.setResults(f" {result1}                {result2} ")
-        time.sleep(5)
+        self.setResults(f" {result1}               {result2} ")
+        time.sleep(1)  # Update the result
+        time.sleep(2)  # Wait until the move
         self.player_move(result1+result2)
 
     # After the roll_dice method has ended, this method will start

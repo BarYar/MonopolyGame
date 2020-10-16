@@ -11,3 +11,9 @@ for i in range(3):  # Adding the quantity buttons
     tk.Button(start_screen, text=str(i + 2), font=(None, 16, 'bold'), bg="DarkSeaGreen1"). \
         place(x=(i * 0.0625+0.035) * height, y=0.11 * height, height=0.03 * height, width=0.05 * height)
 start_screen.mainloop()
+# class a:
+#     pass
+# class b(a):
+#     pass
+# a = b()
+# print(type(a))

@@ -6,10 +6,9 @@ from Game.Character import Character
    parameters: 
                 1.name - The player name (string)
                 2.money - The player money (float) - can't be negative
-                3.character_name- The name of the character (string) 
-                4.character_picture- The picture of the character location (string) 
-                5.x (float) - default value=None
-                6.y (float) - default value=None
+                3.The character of the player.
+                4.x (float) - default value=None
+                5.y (float) - default value=None
    attributes:             
                 1.jail- True- the player is in jail, False- the player is'nt in jail (boolean)
                 2.hotels - The player's hotels (List(House (obj)))
@@ -22,13 +21,13 @@ from Game.Character import Character
 
 class Player(Houses, Character):
     # Constructor- gets name,money ,character and location
-    def __init__(self, name, money, character_name, character_picture):
+    def __init__(self, name, money, character):
         self.name = name
         self.money = money
         self.jail = False
         self.amount_of_turns = 1
         Houses.__init__(self)
-        Character.__init__(self, character_name, character_picture)
+        Character.__init__(self, None, None, character)
 
     # Set the name
     def setName(self, name):

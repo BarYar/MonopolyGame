@@ -15,9 +15,13 @@ from Game.Displayable import Displayable
 
 class Character(Displayable):
     # Constructor
-    def __init__(self, character_name, character_picture, x=None, y=None):
-        self.character_name = character_name
-        self.character_picture = character_picture
+    def __init__(self, character_name=None, character_picture=None, character=None, x=None, y=None):
+        if character_name and character_picture:
+            self.character_picture = character_picture
+            self.character_name = character_name
+        else:
+            self.character_name = character.getCharacter_Name()
+            self.character_picture = character.getCharacter_picture()
         super().__init__(15, 15, x, y)  # Change for ratio!!!
 
     # Set the name
@@ -30,12 +34,12 @@ class Character(Displayable):
 
     # Returns the name
     def getCharacter_Name(self):
-        return self.name
+        return self.character_name
 
     # Returns the picture
-    def getCharacter_Picture(self):
-        return self.picture
+    def getCharacter_picture(self):
+        return self.character_picture
 
     # repr function for Size class
     def __repr__(self):
-        return f'Character name is: {self.character_name}'
+        return f'Character name is: {self.character_name},  its picture is:{self.character_picture}'

@@ -23,7 +23,6 @@ class Characters(Root):
         self.pictures = os.listdir(f'{self.project_files_root}\Characters')
         self.characters = [Character(self.names[i], self.pictures[i]) for i in range(6)]
 
-
     # Returns The available characters
     def get_available_characters(self):
         return self.names
@@ -38,16 +37,17 @@ class Characters(Root):
         # loc=self.listOfNames.index(name)
         # self.listOfNames.remove(name)
         # self.listOfPics.remove(loc)
-        character = None
+        character_loc = None
         for i in range(len(self.characters)):
             if self.characters[i].getCharacter_Name() == name:
-                character = self.characters[i]
-        return self.characters.remove(character)
+                character_loc = i
+        return self.characters.pop(character_loc)
+
 
     # Get random character name and picture
     def getRandom_character(self):
-        num = random.randint(len(self.characters)-1)
-        return self.names.pop(num), self.pictures.pop(num)
+        num = random.randint(0, len(self.characters)-1)
+        return self.get_character(self.names[num])
 
     # Returns the given amount of characters randomly - do The get_character "amount" times
     def get_random_characters(self, amount):
@@ -55,4 +55,6 @@ class Characters(Root):
         for i in range(amount):
             characters.append(Character(self.getRandom_character()[0], self.getRandom_character()[1]))
         return characters
+
+
 
