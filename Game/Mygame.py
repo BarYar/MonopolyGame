@@ -1,6 +1,10 @@
 from Game.Board import Board
 from Game.Player import Player
 from Game.Characters import Characters
+import tkinter as tk
+import random
+import time
+
 
 """Game class- 
    parameters: 
@@ -14,13 +18,16 @@ from Game.Characters import Characters
                 4. in_game- True- The game started, False- The game ended (boolean)
                 5. in_turn- The turn started, False- The turn ended (boolean)
                 6. current_player- Pointer for the current player (int)
-                7. screen_width - The width of the screen.
-                8. screen_height - The height of the screen.
-                9. window - the window of the game (Tkinter(obj)).
-                10. board - the frame of the board in the window (Tkinter(obj)).
-                11. squares - The list of the squares (List(Tkinter(obj))
-                12. loc - The pointer of the words (int). - default value = 0 
-                13. words - The list of the squares details strings (List(string))
+                7. roll_dice_pice- PhotoImage object in tkinter (PhotoImage(Tkinter(obj))
+                8. screen_width - The width of the screen.
+                9. screen_height - The height of the screen.
+                10. window - the window of the game (Tkinter(obj)).
+                11. board - the frame of the board in the window (Tkinter(obj)).
+                12. squares - The list of the squares (List(Tkinter(obj))
+                13. loc - The pointer of the words (int). - default value = 0 
+                14. words - The list of the squares details strings (List(string))
+                15. start_screen - This screen will be create when the game start.
+                16. buttons- list of the game buttons (List(tk.Button(obj)))
 
    """
 
@@ -35,6 +42,9 @@ class Mygame(Board):
         self.current_player = 0
         self.in_game = False
         self.in_turn = False
+        self.buttons = []
+        self.players_quantity = 0
+        self.loadPictures()
 
     # Get the game_money
     def getGame_money(self):
@@ -51,6 +61,10 @@ class Mygame(Board):
     # Get the in_turn
     def getIn_turn(self):
         return self.in_turn
+
+    # Get the players quantity
+    def getPlayers_quantity(self):
+        return self.players_quantity
 
     # Get the player by name
     def getPlayer(self, name):
@@ -76,13 +90,16 @@ class Mygame(Board):
     def setIn_turn(self, in_turn):
         self.in_turn = in_turn
 
+    # Set the players quantity
+    def setPlayers_quantity(self,quantity):
+        self.players_quantity = quantity
+
     # Start new game
     def newGame(self):
         self.startScreen()
         self.players_personal_inforamtion()
-        self.create_squares()
+        self.create_board()
         self.create_players_frame()
-        self.createTitle()
         self.createButtons()
         self.locatePlayers()
 
@@ -92,7 +109,23 @@ class Mygame(Board):
 
     # The start screen - welcome label and buttons for choosing players quantity
     def startScreen(self):
-        pass
+        height = self.getScreen_height()
+        start_screen = tk.Tk()
+        start_screen.geometry(f"{str(int(height / 4))}x{str(int(height / 4))}")
+        start_screen.iconbitmap(self.getIcon())  # Set the icon for the windoww
+        start_screen.title("Monopoly")  # The screen title
+        tk.Label(start_screen, text="Welcome to the Monopoly Game\nChoose this game players quantity.",
+                 font=("Times", "15", "bold"), bg="white").place(x=0, y=0)  # The screen label
+        start_screen.configure(bg="white")
+        for i in range(4):  # Adding the quantity buttons
+            tk.Button(start_screen, text=str(i+1), font=(None, 16, 'bold'),
+                      command=self.setPlayers_quantity(i+1), bg="DarkSeaGreen1").\
+                place(x=i * 0.0625 * height, y=0.11 * height, height=0.03 * height, width=0.05 * height)
+        start_screen.mainloop()
+
+    # Destroy the window, that it gets as a parameter
+    def destroyWindow(self, win):
+        win.destroy()
 
     # Create the players details frames.
     def create_players_frame(self):
@@ -100,12 +133,20 @@ class Mygame(Board):
 
     # Create the game buttons
     def createButtons(self):
+        height = self.getScreen_height()
+        self.buttons.append(tk.Button(self.getBoard(), text="Roll Dice", bg="white", font=(None, 16, 'bold')
+                                      , command=self.roll_dice)
+                            .place(x=0.3*height, y=0.225*height, height=0.05*height, width=0.1*height))
+        self.buttons.append(tk.Button(self.getBoard(), text="Buy", bg="white", font=(None, 16, 'bold')
+                                      , command=self.buy)
+                            .place(x=0.3*height, y=0.3*height, height=0.05*height, width=0.1*height))
+        self.buttons.append(tk.Button(self.getBoard(), text="End Turn", bg="white", font=(None, 16, 'bold')
+                                      , command=self.end_turn)
+                            .place(x=0.6*height, y=0.225*height, height=0.05*height, width=0.1*height))
+        self.buttons.append(tk.Button(self.getBoard(), text="Show Card", bg="white", font=(None, 16, 'bold')
+                                      , command=self.show_card)
+                            .place(x=0.6*height, y=0.3*height, height=0.05*height, width=0.1*height))
         self.setButtons_disabled()
-        pass
-
-    # Create the game title- Monopoly and Monopoly sign in the middle of the board
-    def createTitle(self):
-        pass
 
     # Locate the players on the first square
     def locatePlayers(self):
@@ -125,12 +166,16 @@ class Mygame(Board):
 
     # When pressing on "Roll Dice" button, this command will start
     def roll_dice(self):
-        self.player_move()
-        pass
+        result1 = random.randint(1, 6)
+        result2 = random.randint(1, 6)
+        self.setResults(f" {result1}                {result2} ")
+        time.sleep(5)
+        self.player_move(result1+result2)
 
     # After the roll_dice method has ended, this method will start
-    def player_move(self):
-        pass
+    def player_move(self, moves):
+        for i in range(moves):
+            pass
 
     # When pressing on "Show Card" button, this command will start
     def show_card(self):
@@ -143,6 +188,7 @@ class Mygame(Board):
     # When player pressing on "Quit" button, this command will start
     def quit(self):
         self.players.remove(self.players[self.current_player])
+        self.setPlayers_quantity(self.getPlayers_quantity()-1)
         if len(self.players) == 1:
             self.end_game()
         pass
@@ -179,7 +225,7 @@ class Mygame(Board):
         self.newGame()
         self.in_turn = True
         self.in_game = True
-        self.players = ["", "", "", "" ]
+        self.players = ["", "", "", ""]
         while self.in_game:
             self.setRoll_dice_enabled()
             self.window.mainloop()
