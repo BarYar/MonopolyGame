@@ -78,9 +78,12 @@ class Mygame(Board):
             if player.getName() == name:
                 self.players.remove(player)
 
-    # Adds the player to the players list
-    def addPlayer(self, player):
-        self.players.append(player)
+    # Adds the player to the players list, from the start screen
+    def addPlayer(self):
+        char = self.characters.getRandom_character()
+        self.players.append(Player(self.name_entry.get(), self.game_money, char[0], char[1]))
+        if self.players_quantity == len(self.players):
+            self.destroyWindow(self.start_screen)
 
     # Set the in_game
     def setIn_game(self, in_game):
@@ -97,31 +100,40 @@ class Mygame(Board):
     # Start new game
     def newGame(self):
         self.startScreen()
-        self.players_personal_inforamtion()
+        self.players_personal_information()
         self.create_board()
         self.create_players_frame()
         self.createButtons()
         self.locatePlayers()
 
     # The players enter their names and choose their character
-    def players_personal_inforamtion(self):
-        pass
+    def players_personal_information(self):
+        height = self.getScreen_height()
+        for button in self.buttons:
+            button.destroy()
+        self.name_entry = tk.Entry(self.start_screen)
+        self.name_entry.place(x=0.1 * height, y=0.11 * height, height=0.02 * height, width=0.15 * height)  # Name entry
+        tk.Label(self.start_screen, font=("Times", "10", "bold"), text="Name:")  # Name label
+        tk.Button(self.start_screen, font=("Times", "10", "bold"), text="Enter", command=self.addPlayer)
 
     # The start screen - welcome label and buttons for choosing players quantity
     def startScreen(self):
         height = self.getScreen_height()
-        start_screen = tk.Tk()
-        start_screen.geometry(f"{str(int(height / 4))}x{str(int(height / 4))}")
-        start_screen.iconbitmap(self.getIcon())  # Set the icon for the windoww
-        start_screen.title("Monopoly")  # The screen title
-        tk.Label(start_screen, text="Welcome to the Monopoly Game\nChoose this game players quantity.",
-                 font=("Times", "15", "bold"), bg="white").place(x=0, y=0)  # The screen label
-        start_screen.configure(bg="white")
-        for i in range(4):  # Adding the quantity buttons
-            tk.Button(start_screen, text=str(i+1), font=(None, 16, 'bold'),
-                      command=self.setPlayers_quantity(i+1), bg="DarkSeaGreen1").\
-                place(x=i * 0.0625 * height, y=0.11 * height, height=0.03 * height, width=0.05 * height)
-        start_screen.mainloop()
+        self.start_screen = tk.Tk()
+        self.start_screen.geometry(f"{str(int(height / 4))}x{str(int(height / 4))}")
+        self.start_screen.iconbitmap(self.getIcon())  # Set the icon for the windoww
+        self.start_screen.title("Monopoly")  # The screen title
+        self.start_label = tk.Label(self.start_screen,
+                                    text="Welcome to the Monopoly Game\nChoose this game players quantity.",
+                                    font=("Times", "15", "bold"), bg="white").place(x=0, y=0)  # The screen label
+        self.start_screen.configure(bg="white")
+        for i in range(3):  # Adding the quantity buttons
+            self.start_buttons = []
+            self.start_buttons.append(tk.Button(self.start_screen, text=str(i+2), font=(None, 16, 'bold'),
+                                                command=self.setPlayers_quantity(i+1), bg="DarkSeaGreen1"))
+            self.start_buttons[i].place(x=(i * 0.0625+0.035) * height, y=0.11 * height,height=0.03 * height,
+                                        width=0.05 * height)
+        self.start_screen.mainloop()
 
     # Destroy the window, that it gets as a parameter
     def destroyWindow(self, win):
@@ -129,6 +141,32 @@ class Mygame(Board):
 
     # Create the players details frames.
     def create_players_frame(self):
+        height = self.getScreen_height()
+        width = self.getScreen_width()
+        self.players_frames = []
+        self.players_cards_frames = []
+        for i in range(len(self.players)):
+            self.players_frames.append(tk.Frame(self.getWindow(), bg="white"))
+            self.players_frames[i].place(x=width - height, y=(height/ self.players_quantity)*i,
+                                        height=height/self.players_quantity, witdth=width - height)
+            self.players_frame_details(i)
+
+    # Players frame details
+    def players_frame_details(self, cur_player):
+        tk.Label(self.players_frames[cur_player], font=(None, 18, 'bold'),
+                 text=f"Name: {self.players[cur_player].getName()}", bg="DarkSeaGreen1").\
+            place(relx=0, rely=0, relheight=1/8, relwidth=1)
+        card_frame = tk.Frame(self.players_frames[cur_player], bg="DarkSeaGreen1")
+        card_frame.place(relx=0, rely=1/8, relheight=7/8, relwidth=1)
+        self.addCards_frames(card_frame)
+
+    # Add Frames to card_frames, all of the frames there are "sons" of player_frame.
+    def addCards_frames(self, frame):
+        self.players_cards_frames.append(frame)
+
+    # Add cards to player card_frame.
+    # Get the player num in the list.
+    def addCards_player_card_frame(self, player_num):
         pass
 
     # Create the game buttons
@@ -141,7 +179,7 @@ class Mygame(Board):
                                       , command=self.buy)
                             .place(x=0.3*height, y=0.3*height, height=0.05*height, width=0.1*height))
         self.buttons.append(tk.Button(self.getBoard(), text="End Turn", bg="white", font=(None, 16, 'bold')
-                                      , command=self.end_turn)
+                                      , command=self.end_turn())
                             .place(x=0.6*height, y=0.225*height, height=0.05*height, width=0.1*height))
         self.buttons.append(tk.Button(self.getBoard(), text="Show Card", bg="white", font=(None, 16, 'bold')
                                       , command=self.show_card)
@@ -181,6 +219,10 @@ class Mygame(Board):
     def show_card(self):
         pass
 
+    # When pressing on "End Turn" button, this command will start after end_turn command
+    def end_show_card(self):
+        pass
+
     # When pressing on "Buy" button, this command will start
     def buy(self):
         pass
@@ -203,6 +245,7 @@ class Mygame(Board):
             self.current_player += 1
         else:
             self.current_player = 0
+        self.end_show_card()
         self.setRoll_dice_enabled()
         pass
 

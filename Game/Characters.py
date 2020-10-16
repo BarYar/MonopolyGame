@@ -44,10 +44,15 @@ class Characters(Root):
                 character = self.characters[i]
         return self.characters.remove(character)
 
-    # Returns the given amount of characters randomly - do The get_character "amount" times
+    # Get random character name and picture
+    def getRandom_character(self):
+        num = random.randint(len(self.characters)-1)
+        return self.names.pop(num), self.pictures.pop(num)
 
+    # Returns the given amount of characters randomly - do The get_character "amount" times
     def get_random_characters(self, amount):
         characters = []
         for i in range(amount):
-            characters.append(self.get_character(self.names[random.randint(len(self.names))]))
+            characters.append(Character(self.getRandom_character()[0], self.getRandom_character()[1]))
         return characters
+
