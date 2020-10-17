@@ -1,7 +1,7 @@
 import os
 import random
 from Game.Character import Character
-from Game.Root import Root
+from Game.Displayable import Displayable
 
 """ Character_List class-
     parameters: 
@@ -14,7 +14,7 @@ from Game.Root import Root
     """
 
 
-class Characters(Root):
+class Characters(Displayable):
     # Constructor
     def __init__(self):
         super().__init__()
@@ -41,6 +41,8 @@ class Characters(Root):
         for i in range(len(self.characters)):
             if self.characters[i].getCharacter_Name() == name:
                 character_loc = i
+        del self.names[character_loc]
+        del self.pictures[character_loc]
         return self.characters.pop(character_loc)
 
 
@@ -53,7 +55,7 @@ class Characters(Root):
     def get_random_characters(self, amount):
         characters = []
         for i in range(amount):
-            characters.append(Character(self.getRandom_character()[0], self.getRandom_character()[1]))
+            characters.append(Character(self.getRandom_character()))
         return characters
 
 

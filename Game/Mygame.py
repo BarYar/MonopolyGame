@@ -81,6 +81,7 @@ class Mygame(Board):
     def addPlayer(self):
         char = self.characters.getRandom_character()
         self.players.append(Player(self.name_entry.get(), self.game_money, char))
+        # self.players[len(self.players)-1].loadCharacter_picture() - For future updates
         self.name_entry.delete(0, 'end')
         if self.players_quantity == len(self.players):
             self.destroyWindow(self.start_screen)
@@ -103,12 +104,11 @@ class Mygame(Board):
         self.create_board()
         self.create_players_frame()
         self.createButtons()
-        self.locatePlayers()
+        self.locateStart()
 
     # The players enter their names and choose their character
     # This method is being called by the start screen buttons
     def players_personal_information(self, players_quantity):
-        print(players_quantity)
         self.setPlayers_quantity(players_quantity)
         height = self.getScreen_height()
         for button in self.start_buttons:
@@ -125,7 +125,7 @@ class Mygame(Board):
     def startScreen(self):
         height = self.getScreen_height()
         self.start_screen = tk.Tk()
-        self.loadPictures()  # Load the pictures
+        self.loadBoard_pictures()  # Load board the pictures
         self.start_screen.geometry(f"{str(int(height / 4))}x{str(int(height / 4))}")
         self.start_screen.iconbitmap(self.getIcon())  # Set the icon for the window
         self.start_screen.title("Monopoly")  # The screen title
@@ -136,7 +136,7 @@ class Mygame(Board):
         self.start_buttons = []
         for i in range(3):  # Adding the quantity buttons
             self.start_buttons.append(tk.Button(self.start_screen, text=str(i+2), font=(None, 16, 'bold'),
-                                                command=lambda: self.players_personal_information(i+2)
+                                                command=lambda p=i: self.players_personal_information(p+2)
                                                 , bg="DarkSeaGreen1"))
             self.start_buttons[i].place(x=(i * 0.0625+0.035) * height, y=0.11 * height, height=0.03 * height,
                                         width=0.05 * height)
@@ -153,7 +153,7 @@ class Mygame(Board):
         self.players_frames = []
         self.players_cards_frames = []
         for i in range(self.players_quantity):
-            self.players_frames.append(tk.Frame(self.getWindow(), bg="white", highlightthickness=True))
+            self.players_frames.append(tk.Frame(self.getWindow(), bg="SkyBlue1", highlightthickness=True))
             self.players_frames[i].place(x=height, y=(height / self.players_quantity)*i,
                                         height=height/self.players_quantity, width=width - height)
             self.players_frame_details(i)
@@ -161,9 +161,9 @@ class Mygame(Board):
     # Players frame details
     def players_frame_details(self, cur_player):
         tk.Label(self.players_frames[cur_player], font=(None, 18, 'bold'),
-                 text=f"Name: {self.players[cur_player].getName()}", bg="DarkSeaGreen1").\
+                 text=f"Name: {self.players[cur_player].getName()}", bg="SkyBlue1").\
             place(relx=0, rely=0, relheight=1/8, relwidth=1)
-        card_frame = tk.Frame(self.players_frames[cur_player], bg="DarkSeaGreen1")
+        card_frame = tk.Frame(self.players_frames[cur_player], bg="SkyBlue1")
         card_frame.place(relx=0, rely=1/8, relheight=7/8, relwidth=1)
         self.addCards_frames(card_frame)
 
@@ -193,9 +193,34 @@ class Mygame(Board):
                             .place(x=0.6*height, y=0.3*height, height=0.05*height, width=0.1*height))
         self.setButtons_disabled()
 
-    # Locate the players on the first square
-    def locatePlayers(self):
-        pass
+    # Create the player circle
+    def create_player_circle(self, x, y, r, canvas):  # center coordinates, radius
+        x0 = x - r
+        y0 = y - r
+        x1 = x + r
+        y1 = y + r
+        return canvas.create_oval(x0, y0, x1, y1)
+
+    # Locate the given player on the given square
+    def locatePlayer(self, player, square_num):
+        colors = ["blue2", "orange", "gold", "black"]
+        self.getSquares()[square_num].addPlayer_square(player)
+        player_picture = tk.Canvas(self.getBoard(), bg=colors[self.current_player])
+        # player_picture = player.getCharacter_picture()
+        player_picture.place(x=player.getX(), y=player.getY(), height=player.getHeight(), width=player.getWidth())
+
+    # Locate the players on the first square and set first frame to white- first player
+    def locateStart(self):
+        colors = ["blue2", "orange", "gold", "black"]
+        color_locator = 0
+        for player in self.players:
+            # player_picture = tk.Canvas(self.getBoard(), bg=colors[color_locator])
+            # player.setCharacter_Picture(player_picture)
+            self.locatePlayer(player, 0)
+            # self.getSquares()[0].addPlayer_square(player)
+            # player_picture.place(x=player.getX(), y=player.getY(), height=player.getHeight(), width=player.getWidth())
+            # self.create_player_circle(player.getX(), player.getY(), player.getHeight(), player_picture) -Does'nt work
+            color_locator += 1
 
     # Set the state of  all of the buttons to disabled, for all players.
     def setButtons_disabled(self):
@@ -220,8 +245,15 @@ class Mygame(Board):
 
     # After the roll_dice method has ended, this method will start
     def player_move(self, moves):
-        for i in range(moves):
-            pass
+        square_num = self.players[self.current_player].getCurrent_square() + moves
+        if square_num == 28:
+            self.players[self.current_player].moneyTransaction(400)
+            square_num = 0
+        elif square_num > 28:
+            self.players[self.current_player].moneyTransaction(200)
+            square_num = square_num - 28
+        self.players[self.current_player].setCurrent_square(square_num)
+        self.locatePlayer(self.players[self.current_player], square_num)
 
     # When pressing on "Show Card" button, this command will start
     def show_card(self):
@@ -276,7 +308,6 @@ class Mygame(Board):
         self.newGame()
         self.in_turn = True
         self.in_game = True
-        self.players = ["", "", "", ""]
         while self.in_game:
             self.setRoll_dice_enabled()
             self.window.mainloop()

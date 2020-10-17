@@ -1,4 +1,5 @@
 from Game.Displayable import Displayable
+from PIL import Image, ImageTk
 
 
 """ Character class-
@@ -25,12 +26,12 @@ class Character(Displayable):
         super().__init__(15, 15, x, y)  # Change for ratio!!!
 
     # Set the name
-    def setCharacter_name(self, name):
-        self.name = name
+    def setCharacter_name(self, character_name):
+        self.character_name = character_name
 
     # Set the picture
-    def setCharacter_Picture(self, picture):
-        self.picture = picture
+    def setCharacter_Picture(self, character_picture):
+        self.character_picture = character_picture
 
     # Returns the name
     def getCharacter_Name(self):
@@ -39,6 +40,12 @@ class Character(Displayable):
     # Returns the picture
     def getCharacter_picture(self):
         return self.character_picture
+
+    # Load the character picture
+    def loadCharacter_picture(self):
+        path = self.character_picture
+        self.character_picture = ImageTk.PhotoImage(Image.open(path).resize(
+            (int(0.05 * self.getScreen_height()), int(0.05 * self.getScreen_height())), Image.ANTIALIAS))
 
     # repr function for Size class
     def __repr__(self):

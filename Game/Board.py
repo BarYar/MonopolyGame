@@ -1,13 +1,11 @@
 import tkinter as tk
-import ctypes
-from tkinter import font
 import os
-from Game.Root import Root
 from Game.Street import Street as ST
 from Game.Go import Go
 from Game.Go_to_jail import Go_to_jail as GTJ
 from Game.Free_parking import Free_parking as FP
 from Game.Jail import Jail as JA
+from Game.Displayable import Displayable
 import random
 import time
 from PIL import Image, ImageTk
@@ -26,25 +24,14 @@ from PIL import Image, ImageTk
    """
 
 
-class Board(Root):
+class Board(Displayable):
     #  Constructor
     def __init__(self):
         super().__init__()
-        user32 = ctypes.windll.user32
-        self.screen_width = user32.GetSystemMetrics(0)
-        self.screen_height = user32.GetSystemMetrics(1)
         self.squares = []
         self.loc = 0  # Pointer for the words
-        with open(f'{self.project_files_root}\Cities\Cities.txt', "r") as text:  # Squares details
+        with open(f'{self.getProject_files_root()}\Cities\Cities.txt', "r") as text:  # Squares details
             self.words = text.read().split()  # Getting it's value
-
-    # Get the screen_height
-    def getScreen_height(self):
-        return self.screen_height
-
-    # Get the screen_width
-    def getScreen_width(self):
-        return self.screen_width
 
     # Get the window
     def getWindow(self):
@@ -62,27 +49,32 @@ class Board(Root):
     def setResults(self, results):
         self.results.set(results)
 
+    # Get the squares
+    def getSquares(self):
+        return self.squares
+
     # Load and resize the pictures for the game
-    def loadPictures(self):
+    def loadBoard_pictures(self):
+        height = self.getScreen_height()
         self.roll_dice_pic = ImageTk.PhotoImage(Image.open(f'{self.project_root}\Files\Misc\dice.png')
                                                 .resize(
-            (int(0.15 * self.screen_height), int(0.075 * self.screen_height))
+            (int(0.15 * height), int(0.075 * height))
             , Image.ANTIALIAS))
         self.monopoly_title = ImageTk.PhotoImage(Image.open(f'{self.project_root}\Files\Misc\monopoly_title.png')
-                                                 .resize((int(0.6 * self.screen_height), int(0.15 * self.screen_height))
+                                                 .resize((int(0.6 * height), int(0.15 * height))
                                                          , Image.ANTIALIAS))
         self.jail_pic = ImageTk.PhotoImage(Image.open(f'{self.project_root}\Files\Misc\jail.png')
-                                           .resize((int(0.2 * self.screen_height), int(0.2 * self.screen_height))
+                                           .resize((int(0.2 * height), int(0.2 * height))
                                                    , Image.ANTIALIAS))
         self.go_pic = ImageTk.PhotoImage(Image.open(f'{self.project_root}\Files\Misc\go.png')
-                                         .resize((int(0.2 * self.screen_height), int(0.2 * self.screen_height))
+                                         .resize((int(0.2 * height), int(0.2 * height))
                                                  , Image.ANTIALIAS))
         self.go_to_jail_pic = ImageTk.PhotoImage(Image.open(f'{self.project_root}\Files\Misc\go_to_jail.png')
-                                                 .resize((int(0.2 * self.screen_height), int(0.2 * self.screen_height))
+                                                 .resize((int(0.2 * height), int(0.2 * height))
                                                          , Image.ANTIALIAS))
         self.free_parking_pic = ImageTk.PhotoImage(Image.open(f'{self.project_root}\Files\Misc\parking.png')
                                                    .resize(
-            (int(0.2 * self.screen_height), int(0.2 * self.screen_height))
+            (int(0.2 * height), int(0.2 * height))
             , Image.ANTIALIAS))
         self.icon = f'{self.project_root}\Files\Misc\icon.ico'
 
@@ -135,14 +127,15 @@ class Board(Root):
                                                     width=int(self.screen_height / 5),
                                                     image=self.free_parking_pic, highlightthickness=True,
                                                     bg="DarkSeaGreen1")))
+
                 else:
                     self.squares.append(Go(tk.Label(self.board, height=int(self.screen_height / 5),
                                                     width=int(self.screen_height / 5),
                                                     image=self.go_pic, highlightthickness=True,
                                                     bg="DarkSeaGreen1")))
                 self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
-                self.squares[i].setX(x)
-                self.squares[i].setY(y)
+                self.squares[len(self.squares) - 1].setX(x)
+                self.squares[len(self.squares) - 1].setY(y)
                 x = x + self.screen_height / 5
             else:  # Normal square
                 self.squares.append(ST(tk.Frame(self.board, height=int(self.screen_height / 5),
@@ -153,11 +146,10 @@ class Board(Root):
                     self.square_details(self.up())
                 else:
                     self.square_details(self.down())
-                self.squares[i].setX(x)
-                self.squares[i].setY(y)
+                self.squares[len(self.squares) - 1].setX(x)
+                self.squares[len(self.squares) - 1].setY(y)
                 x = x + self.screen_height / 10
                 self.loc += 4
-
 
     # Even lines creator
     def uneven_lines(self, j):
@@ -177,13 +169,14 @@ class Board(Root):
                                                      width=int(self.screen_height / 5),
                                                      image=self.go_to_jail_pic, highlightthickness=True
                                                      , bg="DarkSeaGreen1")))
+
                 else:
                     self.squares.append(JA(tk.Label(self.board, height=int(self.screen_height / 5),
                                                     width=int(self.screen_height / 5),
                                                     image=self.jail_pic, highlightthickness=True, bg="DarkSeaGreen1")))
                 self.squares[len(self.squares) - 1].getFrame().place(x=x, y=y)
-                self.squares[i].setX(x)
-                self.squares[i].setY(y)
+                self.squares[len(self.squares) - 1].setX(x)
+                self.squares[len(self.squares) - 1].setY(y)
                 y = y + self.screen_height / 5
             else:  # Normal square
                 self.squares.append(ST(tk.Frame(self.board, height=int(self.screen_height / 10),
@@ -194,8 +187,8 @@ class Board(Root):
                     self.square_details(self.right())
                 else:
                     self.square_details(self.left())
-                self.squares[i].setX(x)
-                self.squares[i].setY(y)
+                self.squares[len(self.squares) - 1].setX(x)
+                self.squares[len(self.squares) - 1].setY(y)
                 y = y + self.screen_height / 10
                 self.loc += 4
 
@@ -235,12 +228,24 @@ class Board(Root):
     def left(self):
         return 0, 0, 1, 0.125, 0.875, 0
 
+    # Sort the squares by their location on the board
+    def sortSquares(self):
+        fourteentwenty = []
+        twentyonetwentyseven = []
+        for i in range(6):
+            fourteentwenty.append(self.squares[20 - i])
+            twentyonetwentyseven.append(self.squares[27 - i])
+        self.squares[14:20] = fourteentwenty
+        self.squares[21:27] = twentyonetwentyseven
+
+
+
     # Create the board squares
     def create_board(self):
         # Methods for creation of the board
         self.window = tk.Tk()  # Create the window of the game
         self.board = tk.Frame(self.window, height=self.screen_height, width=self.screen_height)  # Create the board
-        self.loadPictures()
+        self.loadBoard_pictures()
         for j in range(4):
             if j % 2 == 0:
                 if j == 0:
@@ -252,6 +257,7 @@ class Board(Root):
                     self.uneven_lines(j)
                 else:
                     self.uneven_lines(j)
+        self.sortSquares()
         self.board.place(x=0, y=0)
         self.setIcon_window()
         self.createTitle()

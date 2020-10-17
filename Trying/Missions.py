@@ -14,6 +14,7 @@ Missions for tomorrow:
 Near future update ideas:
     1) Add a Lucky box squares.
     2) Add a trivia square - if you win the trivia question you get 200₪  if you lose you lose 100₪.
+    3) Add characters
 
 
 Far future updates ideas:

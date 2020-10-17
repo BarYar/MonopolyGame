@@ -25,7 +25,9 @@ class Player(Houses, Character):
         self.name = name
         self.money = money
         self.jail = False
-        self.amount_of_turns = 1
+        self.amount_of_turns = 0
+        self.streets = []
+        self.current_square = 0
         Houses.__init__(self)
         Character.__init__(self, None, None, character)
 
@@ -40,6 +42,14 @@ class Player(Houses, Character):
     # Set the jail parameter to True/False
     def setJail(self, jail):
         self.jail = jail
+
+    # Set the current square
+    def setCurrent_square(self, current_square):
+        self.current_square = current_square
+
+    # Add a street to list of streets
+    def addStreet(self, street):
+        self.streets.append(street)
 
     # Add 1 turn to amount_of_turns
     def addOne_turn(self):
@@ -61,10 +71,18 @@ class Player(Houses, Character):
     def getAmount_of_turns(self):
         return self.amount_of_turns
 
+    # Get the streets
+    def getStreets(self):
+        return self.streets
+
+    # Get the current square
+    def getCurrent_square(self):
+        return self.current_square
+
     # Returns if the player is in jail
     def isIn_jail(self):
         return self.jail
 
     # Reduce/Increase the money of a player
-    def money_transaction(self, price):
+    def moneyTransaction(self, price):
         self.money = self.money + price

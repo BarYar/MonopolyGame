@@ -13,7 +13,7 @@ from Game.House import House
 
 class Houses:
     # Constructor set the houses for a player (default value-3 Hotels, 5 Regular)
-    def __init__(self, amount=(5, 3)):
+    def __init__(self, amount=(12, 3)):
         self.houses = [House(0) for i in range(amount[0])]  # Sets the regular houses
         self.hotels = [House(1) for i in range(amount[1])]  # Sets the hotels
 

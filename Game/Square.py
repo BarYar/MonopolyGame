@@ -17,7 +17,7 @@ class Square(Displayable):
     # Constructor
     def __init__(self, frame):
         self.frame = frame
-        self.characters = []
+        self.players = []
         super().__init__()
 
     # Sets the frame
@@ -28,12 +28,27 @@ class Square(Displayable):
     def getFrame(self):
         return self.frame
 
-    # Adds character to characters list
-    def addCharacter(self, player):
-        self.characters.append(player)
+    # Adds player to characters list, and set his x and y to square x and y
+    def addPlayer_square(self, player):
+        self.players.append(player)
+        height = self.getScreen_height()
+        # Locating the players
+        if len(self.players) % 2 != 0:
+            player.setX(self.getX() + int(height/30))
+            player.setY(self.getY() + int(height / 30) + (((len(self.players) - 1) / 2) * 0.03 * height))
+        else:
+            player.setX(self.getX() + int(height/30) + height * 0.04)
+            player.setY(self.getY() + int(height/30) + (((len(self.players) - 2)/2) * 0.03 * height))
+        player.setHeight(int(0.028 * height))
+        player.setWidth(int(0.028 * height))
+
+
+    # Get the players list
+    def getPlayers(self):
+        return self.players
 
     # Remove player from the characters list
-    def removeCharacter(self, player):
-        for i in range(len(self.characters)):
-            if self.characters[i].getName() == player.getName():
-                self.characters.remove(self.characters[i])
+    def removePlayer(self, player):
+        for i in range(len(self.players)):
+            if self.players[i].getName() == player.getName():
+                self.players.remove(self.players[i])
