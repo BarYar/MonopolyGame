@@ -28,6 +28,7 @@ class Player(Houses, Character):
         self.amount_of_turns = 0
         self.streets = []
         self.current_square = 0
+        self.color = None
         Houses.__init__(self)
         Character.__init__(self, None, None, character)
 
@@ -46,6 +47,11 @@ class Player(Houses, Character):
     # Set the current square
     def setCurrent_square(self, current_square):
         self.current_square = current_square
+
+    # Set the color
+    # Until the character update
+    def setColor(self, color):
+        self.color = color
 
     # Add a street to list of streets
     def addStreet(self, street):
@@ -66,6 +72,11 @@ class Player(Houses, Character):
     # Get the money
     def getMoney(self):
         return self.money
+
+    # Get the color
+    # Until the character update
+    def getColor(self):
+        return self.color
 
     # Get the money
     def getAmount_of_turns(self):

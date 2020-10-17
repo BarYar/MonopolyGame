@@ -42,7 +42,6 @@ class Square(Displayable):
         player.setHeight(int(0.028 * height))
         player.setWidth(int(0.028 * height))
 
-
     # Get the players list
     def getPlayers(self):
         return self.players
