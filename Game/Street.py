@@ -43,6 +43,10 @@ class Street(Square):
     def setLand_price(self, land_price):
         self.land_price = land_price
 
+    # Set owned_by
+    def setOwned_by(self, player):
+        self.owned_by = player
+
     # Add the {houses} to self.houses
     # parameters:
     #               1.houses
@@ -72,6 +76,10 @@ class Street(Square):
     def getHouses(self):
         return self.houses
 
+    # Get owned_by
+    def getOwned_by(self):
+        return self.owned_by
+
     # Remove all the houses from the list
     # It will happen mostly when a player wants to upgrade to hotel
     def clearHouses(self):
@@ -95,7 +103,7 @@ class Street(Square):
     # parameters:
     #               1.amount (int)
     #               2.typ 0/1 (int)
-    #               3.payment True/False(boolean
+    #               3.payment True/False(boolean)
     def get_buying_or_fine_price(self, amount, typ, payment):
         sum_price = 0
         payment_multiple = 1
@@ -123,8 +131,8 @@ class Street(Square):
     # buying[0]-list of all the houses buying price, buying [1] - buying price of the hotel.
     # fines[0]-list of all the houses fines price, buying [1] - fines price of the hotel.
     def card(self):
-        self.buying = [self.get_buying_or_fine_price(i, 0, True) for i in range(1 ,5)]
+        self.buying = [self.get_buying_or_fine_price(i, 0, True) for i in range(1, 5)]
         self.buying.append(self.get_buying_or_fine_price(1, 1, True))
-        self.fines = [self.get_buying_or_fine_price(i, 0, False) for i in range(1 ,5)]
+        self.fines = [self.get_buying_or_fine_price(i, 0, False) for i in range(1, 5)]
         self.fines.append(self.get_buying_or_fine_price(1, 1, False))
         return self.buying, self.fines

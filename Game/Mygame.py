@@ -5,7 +5,6 @@ import tkinter as tk
 import random
 import time
 
-
 """Game class- 
    parameters: 
 
@@ -95,7 +94,7 @@ class Mygame(Board):
         self.in_turn = in_turn
 
     # Set the players quantity
-    def setPlayers_quantity(self,quantity):
+    def setPlayers_quantity(self, quantity):
         self.players_quantity = quantity
 
     # Start new game
@@ -115,11 +114,11 @@ class Mygame(Board):
             button.destroy()
         self.name_entry = tk.Entry(self.start_screen)
         self.name_entry.place(x=0.04 * height, y=0.11 * height, height=0.02 * height, width=0.15 * height)  # Name entry
-        tk.Label(self.start_screen, font=("Times", "10", "bold"), text="Name:", bg="white")\
+        tk.Label(self.start_screen, font=("Times", "10", "bold"), text="Name:", bg="white") \
             .place(x=0, y=0.11 * height, height=0.02 * height, width=0.03 * height)  # Name label
         tk.Button(self.start_screen, font=("Times", "10", "bold"),
-                  text="Enter", command=self.addPlayer, bg="DarkSeaGreen1")\
-            .place(x=0.1*height, y=0.15 * height, height=0.02 * height, width=0.03 * height)  # Enter button
+                  text="Enter", command=self.addPlayer, bg="DarkSeaGreen1") \
+            .place(x=0.1 * height, y=0.15 * height, height=0.02 * height, width=0.03 * height)  # Enter button
 
     # The start screen - welcome label and buttons for choosing players quantity
     def startScreen(self):
@@ -135,10 +134,10 @@ class Mygame(Board):
         self.start_screen.configure(bg="white")
         self.start_buttons = []
         for i in range(3):  # Adding the quantity buttons
-            self.start_buttons.append(tk.Button(self.start_screen, text=str(i+2), font=(None, 16, 'bold'),
-                                                command=lambda p=i: self.players_personal_information(p+2)
+            self.start_buttons.append(tk.Button(self.start_screen, text=str(i + 2), font=(None, 16, 'bold'),
+                                                command=lambda p=i: self.players_personal_information(p + 2)
                                                 , bg="DarkSeaGreen1"))
-            self.start_buttons[i].place(x=(i * 0.0625+0.035) * height, y=0.11 * height, height=0.03 * height,
+            self.start_buttons[i].place(x=(i * 0.0625 + 0.035) * height, y=0.11 * height, height=0.03 * height,
                                         width=0.05 * height)
         self.start_screen.mainloop()
 
@@ -155,8 +154,8 @@ class Mygame(Board):
         self.players_frames_stringVar_details = []
         for i in range(self.players_quantity):
             self.players_frames.append(tk.Frame(self.getWindow(), bg="SkyBlue1", highlightthickness=True))
-            self.players_frames[i].place(x=height, y=(height / self.players_quantity)*i,
-                                        height=height/self.players_quantity, width=width - height)
+            self.players_frames[i].place(x=height, y=(height / self.players_quantity) * i,
+                                         height=height / self.players_quantity, width=width - height)
             self.players_frame_details(i)
 
     # Players frame details
@@ -164,11 +163,11 @@ class Mygame(Board):
         player_details = tk.StringVar()
         player_details.set(f"Name: {self.players[cur_player].getName()} Money: {self.players[cur_player].getMoney()}")
         tk.Label(self.players_frames[cur_player], font=(None, 18, 'bold'),
-                 textvariable=player_details, bg="SkyBlue1").\
-            place(relx=0, rely=0, relheight=1/8, relwidth=1)
+                 textvariable=player_details, bg="SkyBlue1"). \
+            place(relx=0, rely=0, relheight=1 / 8, relwidth=1)
         self.players_frames_stringVar_details.append(player_details)
         card_frame = tk.Frame(self.players_frames[cur_player], bg="SkyBlue1")
-        card_frame.place(relx=0, rely=1/8, relheight=7/8, relwidth=1)
+        card_frame.place(relx=0, rely=1 / 8, relheight=7 / 8, relwidth=1)
         self.addCards_frames(card_frame)
 
     # Add Frames to card_frames, all of the frames there are "sons" of player_frame.
@@ -185,16 +184,19 @@ class Mygame(Board):
         height = self.getScreen_height()
         self.buttons.append(tk.Button(self.getBoard(), text="Roll Dice", bg="white", font=(None, 16, 'bold')
                                       , command=self.roll_dice)
-                            .place(x=0.3*height, y=0.225*height, height=0.05*height, width=0.1*height))
+                            .place(x=0.3 * height, y=0.225 * height, height=0.05 * height, width=0.1 * height))
         self.buttons.append(tk.Button(self.getBoard(), text="Buy", bg="white", font=(None, 16, 'bold')
                                       , command=self.buy)
-                            .place(x=0.3*height, y=0.3*height, height=0.05*height, width=0.1*height))
+                            .place(x=0.3 * height, y=0.3 * height, height=0.05 * height, width=0.1 * height))
         self.buttons.append(tk.Button(self.getBoard(), text="End Turn", bg="white", font=(None, 16, 'bold')
                                       , command=self.end_turn)
-                            .place(x=0.6*height, y=0.225*height, height=0.05*height, width=0.1*height))
+                            .place(x=0.6 * height, y=0.225 * height, height=0.05 * height, width=0.1 * height))
         self.buttons.append(tk.Button(self.getBoard(), text="Show Card", bg="white", font=(None, 16, 'bold')
                                       , command=self.show_card)
-                            .place(x=0.6*height, y=0.3*height, height=0.05*height, width=0.1*height))
+                            .place(x=0.6 * height, y=0.3 * height, height=0.05 * height, width=0.1 * height))
+        self.buttons.append(tk.Button(self.getBoard(), text="End Game", bg="white", font=(None, 16, 'bold')
+                                      , command=self.end_game)
+                            .place(x=0.45 * height, y=0.7 * height, height=0.05 * height, width=0.1 * height))
         self.setButtons_disabled()
 
     # Locate the given player on the given square
@@ -215,15 +217,12 @@ class Mygame(Board):
             player.setColor(colors[color_locator])
             self.locatePlayer(player, 0)
             color_locator += 1
-        self.updateCurrent_player_frame_color()
+        self.updateCurrent_player_frame_color(1)
 
     # Update the frame for the current player
-    def updateCurrent_player_frame_color(self):
+    def updateCurrent_player_frame_color(self, last_player):
         self.players_cards_frames[self.current_player].config(bg="white")  # Set the player frame to white
-        if self.current_player == 0:  # Set the previous player frame color to blue
-            self.players_cards_frames[len(self.players)-1].config(bg="SkyBlue1")
-        else:
-            self.players_cards_frames[self.current_player-1].config(bg="SkyBlue1")
+        self.players_cards_frames[last_player].config(bg="SkyBlue1")  # Set the previous player frame color to blue
 
     # Set the state of  all of the buttons to disabled, for all players.
     def setButtons_disabled(self):
@@ -243,23 +242,44 @@ class Mygame(Board):
         result2 = random.randint(1, 6)
         self.setResults(f" {result1}               {result2} ")
         time.sleep(1)  # Update the result
-        self.player_move(result1+result2)
+        self.player_move(result1 + result2, result1 == result2)
 
     # After the roll_dice method has ended, this method will start
-    def player_move(self, moves):
-        square_num = self.players[self.current_player].getCurrent_square() + moves
-        if square_num == 28:
-            self.money_transaction_current_player(400)
-            square_num = 0
-        elif square_num > 28:
-            self.money_transaction_current_player(200)
-            square_num = square_num - 28
-        self.locatePlayer(self.players[self.current_player], square_num)
+    def player_move(self, moves, double):
+        current_player_turns = self.players[self.current_player].getAmount_of_turns()
+        current_square = self.players[self.current_player].getCurrent_square()
+        if current_square == 7 and self.players[self.current_player].isIn_jail() is True:  # Special squares
+            if double:
+                self.players[self.current_player].setJail(False)
+                self.players[self.current_player].resetTurns()
+            elif current_player_turns == 1 or current_player_turns == 2:
+                self.players[self.current_player].addTurn()
+            else:
+                self.players[self.current_player].setJail(False)
+                self.players[self.current_player].resetTurns()
+                self.money_transaction_current_player(-100)
+        else:  # Street squares
+            square_num = current_square + moves
+            if square_num == 28:
+                self.money_transaction_current_player(400)
+                square_num = 0
+            elif square_num > 28:
+                self.money_transaction_current_player(200)
+                square_num = square_num - 28
+            elif square_num == 14 or square_num == 21:
+                self.players[self.current_player].addTurn()
+                if square_num == 21:
+                    self.players[self.current_player].setJail(True)
+                    square_num = 7
+            if self.squares[square_num].getOwned_buy():
+                self.money_transaction_current_player(self.squares[square_num].getFine_price())# Paying the fine price
+            self.locatePlayer(self.players[self.current_player], square_num)
+
 
     # Money transaction to current player
     def money_transaction_current_player(self, money):
         self.players[self.current_player].moneyTransaction(money)
-        self.players_frames_stringVar_details[self.current_player].\
+        self.players_frames_stringVar_details[self.current_player]. \
             set(f'Name: {self.players[self.current_player].getName()} '
                 f'Money: {self.players[self.current_player].getMoney()}')
 
@@ -273,12 +293,39 @@ class Mygame(Board):
 
     # When pressing on "Buy" button, this command will start
     def buy(self):
-        pass
+        if self.squares[self.players[self.current_player].getCurrent_square()].getOwned_by():
+            pass
+        else:  # Opening the payment option
+            height = self.getScreen_height()
+            houses_label = tk.Label(self.getBoard(), bg="DarkSeaGreen1",text="Houses:", font=("Times", "10", "bold"))
+            houses_label.place(x=0.22 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)  # Houses Label
+            houses_variable = tk.StringVar()
+            houses_variable.set(0)
+            houses_options = tk.OptionMenu(self.getWindow(), houses_variable, 0, 1, 2, 3, 4)  # Houses Options menu
+            houses_options.place(x=0.27 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)
+            hotel_label = tk.Label(self.getBoard(), bg="DarkSeaGreen1",text="Hotel", font=("Times", "10", "bold"))
+            hotel_label.place(x=0.32 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height) # Hotel Label
+            hotel_variable = tk.StringVar()
+            hotel_variable.set(0)
+            hotel_options = tk.OptionMenu(self.getWindow(), houses_variable, 0, 1)  # Houses Options menu
+            hotel_options.place(x=0.37 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)
+            buying_process_button = tk.Button(self.getBoard(), bg="white",
+                                              font=("Times", "10", "bold"), text="Buy Now", command=self.buyingProcess)
+            buying_process_button.place(x=0.45 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)
+            self.buy_widgets = [houses_label, houses_options, houses_variable, hotel_label, hotel_options,
+                                hotel_variable, buying_process_button]
+
+    # The buying process
+    def buyingProcess(self):
+        hotel, houses = self.buy_widgets[2].get(), self.buy_widgets[5].get()
+        if hotel:
+            if houses:
+                self.squares[self.players[self.current_player].getCurrent_square()]
 
     # When player pressing on "Quit" button, this command will start
     def quit(self):
         self.players.remove(self.players[self.current_player])
-        self.setPlayers_quantity(self.getPlayers_quantity()-1)
+        self.setPlayers_quantity(self.getPlayers_quantity() - 1)
         if len(self.players) == 1:
             self.end_game()
         pass
@@ -286,13 +333,23 @@ class Mygame(Board):
     # When pressing on "End Turn" button, this command will start
     def end_turn(self):
         self.in_turn = False
-        if self.current_player < len(self.players)-1:
-            self.current_player += 1
-        else:
-            self.current_player = 0
-        self.updateCurrent_player_frame_color()
+        last_player = self.current_player
+        next_player = 0
+        if self.current_player + 1 < len(self.players):
+            next_player = self.current_player + 1
+        while self.players[next_player].getCurrent_square() == 14:  # This loop is for the free_parking square
+            if self.players[next_player].getAmount_of_turns() == 1:
+                self.players[next_player].addTurn()
+                if next_player + 1 < len(self.players):
+                    next_player += 1
+                else:
+                    next_player = 0
+            else:
+                self.players[next_player].resetTurns()
+        self.current_player = next_player
+        self.updateCurrent_player_frame_color(last_player)
         self.end_show_card()
-        self.setRoll_dice_enabled()
+        self.buttons_()
 
     # Create a label of the game winners
     def createWinners(self):

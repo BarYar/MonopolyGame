@@ -18,6 +18,7 @@ class Square(Displayable):
     def __init__(self, frame):
         self.frame = frame
         self.players = []
+        self.owned_by = None
         super().__init__()
 
     # Sets the frame
@@ -27,6 +28,10 @@ class Square(Displayable):
     # Get the frame
     def getFrame(self):
         return self.frame
+
+    # Get owned_by- return None automatically
+    def getOwned_by(self):
+        return None
 
     # Adds player to characters list, and set his x and y to square x and y
     def addPlayer_square(self, player):

@@ -58,12 +58,12 @@ class Player(Houses, Character):
         self.streets.append(street)
 
     # Add 1 turn to amount_of_turns
-    def addOne_turn(self):
+    def addTurn(self):
         self.amount_of_turns += 1
 
     # Reset the amount of turns to 1
     def resetTurns(self):
-        self.amount_of_turns = 1
+        self.amount_of_turns = 0
 
     # Get the name
     def getName(self):

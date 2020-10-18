@@ -232,7 +232,7 @@ class Board(Displayable):
     def sortSquares(self):
         fourteentwenty = []
         twentyonetwentyseven = []
-        for i in range(6):
+        for i in range(7):
             fourteentwenty.append(self.squares[20 - i])
             twentyonetwentyseven.append(self.squares[27 - i])
         self.squares[14:20] = fourteentwenty

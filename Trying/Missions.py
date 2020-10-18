@@ -1,8 +1,9 @@
 """
 Missions for tomorrow:
-    1) Locate the players function- get by winfo.reqheight().
-    2) Add functions in myGame class for the special squares.
-    3) Update the diagram.
+    1) Update the buttons state - can create an inclusive method with **kwargs
+    2) Finish the card process.
+    3) Start and finish the cards process.
+    4) Test the game
 
 
 """
