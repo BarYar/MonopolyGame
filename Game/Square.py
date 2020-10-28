@@ -31,7 +31,7 @@ class Square(Displayable):
 
     # Get owned_by- return None automatically
     def getOwned_by(self):
-        return None
+        return self.owned_by
 
     # Adds player to characters list, and set his x and y to square x and y
     def addPlayer_square(self, player):

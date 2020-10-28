@@ -16,6 +16,7 @@ Near future update ideas:
     1) Add a Lucky box squares.
     2) Add a trivia square - if you win the trivia question you get 200₪  if you lose you lose 100₪.
     3) Add characters
+    4) add option to upgrade the houses in the square
 
 
 Far future updates ideas:

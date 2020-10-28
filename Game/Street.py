@@ -1,4 +1,5 @@
 from Game.Square import Square
+import tkinter as tk
 
 
 """Street class- class for the Street square
@@ -23,13 +24,14 @@ from Game.Square import Square
 
 class Street(Square):
     # Constructor
-    def __init__(self,  frame, city=None, street=None, land_price=None):
+    def __init__(self, frame, city=None, street=None, land_price=None):
         self.city = city
         self.street = street
         self.land_price = land_price
-        self.houses = []
+        self.houses = None
         self.hotel = None
-        Square.__init__(self, frame)  # Change for ratio!!!
+        self.color = None
+        Square.__init__(self, frame)
 
     # Set the city
     def setCity(self, city):
@@ -38,6 +40,10 @@ class Street(Square):
     # Set the street
     def setStreet(self, street):
         self.street = street
+
+    # Set the color for the square
+    def setColor(self, color):
+        self.color = color
 
     # Set the land_price
     def setLand_price(self, land_price):
@@ -50,14 +56,13 @@ class Street(Square):
     # Add the {houses} to self.houses
     # parameters:
     #               1.houses
-    def addHouses(self, houses):
-        for i in houses:
-            self.houses.append(i)
+    def setHouses(self, houses):
+        self.houses = houses
 
     # Set the hotel to hotel
     # parameters:
     #               1.hotel
-    def addHotel(self, hotel):
+    def setHotel(self, hotel):
         self.hotel = hotel
 
     # Get the city
@@ -76,9 +81,13 @@ class Street(Square):
     def getHouses(self):
         return self.houses
 
-    # Get owned_by
-    def getOwned_by(self):
-        return self.owned_by
+    # Get the hotel
+    def getHotel(self):
+        return self.hotel
+
+    # Get the color for the square
+    def getColor(self):
+        return self.color
 
     # Remove all the houses from the list
     # It will happen mostly when a player wants to upgrade to hotel
@@ -88,13 +97,13 @@ class Street(Square):
     # Remove all the houses and hotel from the object
     # It will happen mostly when a player quit/ lost
     def clearHouses_and_hotel(self):
-        self.houses = []
+        self.houses = None
         self.hotel = None
 
     # Get the fine price for landing on the square
     def getFine_price(self):
-        sum_multiple = len(self.houses)
-        if self.hotel:  # Checks if hotel is in the square
+        sum_multiple = self.houses
+        if self.hotel > 0:  # Checks if hotel is in the square
             sum_multiple = 4.4
         return self.land_price * sum_multiple
 
@@ -102,9 +111,9 @@ class Street(Square):
     # Get the price of the square with {amount} of houses from {typ} type
     # parameters:
     #               1.amount (int)
-    #               2.typ 0/1 (int)
+    #               2.typ 0/1 - 0 - "regular house", 1- "hotel" (int)
     #               3.payment True/False(boolean)
-    def get_buying_or_fine_price(self, amount, typ, payment):
+    def getBuying_or_fine_price(self, amount, typ, payment):
         sum_price = 0
         payment_multiple = 1
         if payment:
@@ -127,12 +136,25 @@ class Street(Square):
             raise TypeError(f"Yo've entered a {type(typ)} type- non int type")
         return sum_price
 
-    # Get the square card -payment and fine price for each of the available houses.
+    # Return the tkinter card -payment and fine prices.
     # buying[0]-list of all the houses buying price, buying [1] - buying price of the hotel.
     # fines[0]-list of all the houses fines price, buying [1] - fines price of the hotel.
-    def card(self):
-        self.buying = [self.get_buying_or_fine_price(i, 0, True) for i in range(1, 5)]
-        self.buying.append(self.get_buying_or_fine_price(1, 1, True))
-        self.fines = [self.get_buying_or_fine_price(i, 0, False) for i in range(1, 5)]
-        self.fines.append(self.get_buying_or_fine_price(1, 1, False))
-        return self.buying, self.fines
+    # The "father" window
+    def card(self, window):  # Update
+        city_and_street = f'{self.city} {self.street}'
+        text_buying = f"Buying Prices:\nHotel:{int(self.getBuying_or_fine_price(1, 1, True))}₪\nHouses:"
+        for i in range(1, 5):
+            text_buying = f"{text_buying} {i}: {int(self.getBuying_or_fine_price(i, 0, True))}₪\n"
+        text_fines = f"Rent Prices:\nHotel:{int(self.getBuying_or_fine_price(1, 1, False))}₪\nHouses:"
+        for i in range(1, 5):
+            text_fines = f"{text_fines} {i}: {int(self.getBuying_or_fine_price(i, 0, False))}₪\n"
+        height = self.getScreen_height()
+        card = tk.Frame(window, bg="white", height=height/3, width=height/6, highlightthickness=True)  # The card frame
+        tk.Label(card, bg=self.color).place(relheight=1/16, relwidth=1, relx=0, rely=0)  # The card color
+        tk.Label(card, bg="white", font=("Times", "13", "italic bold"), text=city_and_street)\
+            .place(relheight=1/26, relwidth=1, relx=0, rely=1/16)  # The card City and street
+        tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_buying) \
+            .place(relheight=21/64, relwidth=1, relx=0, rely=7/64)  # The card buying prices
+        tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_fines) \
+            .place(relheight=1/3, relwidth=1, relx=0, rely=12/32)  # The card fines prices
+        return card

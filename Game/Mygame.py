@@ -149,10 +149,12 @@ class Mygame(Board):
     def create_players_frame(self):
         height = self.getScreen_height()
         width = self.getScreen_width()
+        colors = ["blue2", "orange", "gold", "green"]
         self.players_frames = []
         self.players_cards_frames = []
         self.players_frames_stringVar_details = []
         for i in range(self.players_quantity):
+            self.players[i].setColor(colors[i])
             self.players_frames.append(tk.Frame(self.getWindow(), bg="SkyBlue1", highlightthickness=True))
             self.players_frames[i].place(x=height, y=(height / self.players_quantity) * i,
                                          height=height / self.players_quantity, width=width - height)
@@ -163,7 +165,7 @@ class Mygame(Board):
         player_details = tk.StringVar()
         player_details.set(f"Name: {self.players[cur_player].getName()} Money: {self.players[cur_player].getMoney()}")
         tk.Label(self.players_frames[cur_player], font=(None, 18, 'bold'),
-                 textvariable=player_details, bg="SkyBlue1"). \
+                 textvariable=player_details, bg=self.players[cur_player].getColor()). \
             place(relx=0, rely=0, relheight=1 / 8, relwidth=1)
         self.players_frames_stringVar_details.append(player_details)
         card_frame = tk.Frame(self.players_frames[cur_player], bg="SkyBlue1")
@@ -183,21 +185,33 @@ class Mygame(Board):
     def createButtons(self):
         height = self.getScreen_height()
         self.buttons.append(tk.Button(self.getBoard(), text="Roll Dice", bg="white", font=(None, 16, 'bold')
-                                      , command=self.roll_dice)
-                            .place(x=0.3 * height, y=0.225 * height, height=0.05 * height, width=0.1 * height))
-        self.buttons.append(tk.Button(self.getBoard(), text="Buy", bg="white", font=(None, 16, 'bold')
-                                      , command=self.buy)
-                            .place(x=0.3 * height, y=0.3 * height, height=0.05 * height, width=0.1 * height))
+                                      , command=self.roll_dice))
+        self.buttons[0].place(x=0.3 * height, y=0.225 * height, height=0.05 * height, width=0.1 * height)
+        self.buttons.append(tk.Button(self.getBoard(), text="Buy", bg="white", font=(None, 16, 'bold'),
+                                      command=self.buy))
+        self.buttons[1].place(x=0.3 * height, y=0.3 * height, height=0.05 * height, width=0.1 * height)
         self.buttons.append(tk.Button(self.getBoard(), text="End Turn", bg="white", font=(None, 16, 'bold')
-                                      , command=self.end_turn)
-                            .place(x=0.6 * height, y=0.225 * height, height=0.05 * height, width=0.1 * height))
+                                      , command=self.end_turn))
+        self.buttons[2].place(x=0.6 * height, y=0.225 * height, height=0.05 * height, width=0.1 * height)
         self.buttons.append(tk.Button(self.getBoard(), text="Show Card", bg="white", font=(None, 16, 'bold')
-                                      , command=self.show_card)
-                            .place(x=0.6 * height, y=0.3 * height, height=0.05 * height, width=0.1 * height))
+                                      , command=self.show_card))
+        self.buttons[3].place(x=0.6 * height, y=0.3 * height, height=0.05 * height, width=0.1 * height)
         self.buttons.append(tk.Button(self.getBoard(), text="End Game", bg="white", font=(None, 16, 'bold')
-                                      , command=self.end_game)
-                            .place(x=0.45 * height, y=0.7 * height, height=0.05 * height, width=0.1 * height))
-        self.setButtons_disabled()
+                                      , command=self.end_game))
+        self.buttons[4].place(x=0.45 * height, y=0.7 * height, height=0.05 * height, width=0.1 * height)
+        self.buttonsStates(True, 0)
+        self.buttonsStates(False, 1, 2, 3, 4)
+
+    # Change the button states the value is the button
+    # state = 0 - Disabled, state = 1 - Enabled
+    # enable = True - state= NORMAL,  enable = False - state= DISABLED
+    def buttonsStates(self, enable, *buttons_location):
+        if enable:
+            for location in buttons_location:
+                self.buttons[int(location)].config(state=tk.NORMAL)
+        else:
+            for location in buttons_location:
+                self.buttons[int(location)].config(state=tk.DISABLED)
 
     # Locate the given player on the given square
     def locatePlayer(self, player, square_num):
@@ -211,12 +225,8 @@ class Mygame(Board):
 
     # Locate the players on the first square and set first frame to white- first player
     def locateStart(self):
-        colors = ["blue2", "orange", "gold", "black"]
-        color_locator = 0
         for player in self.players:
-            player.setColor(colors[color_locator])
             self.locatePlayer(player, 0)
-            color_locator += 1
         self.updateCurrent_player_frame_color(1)
 
     # Update the frame for the current player
@@ -224,17 +234,12 @@ class Mygame(Board):
         self.players_cards_frames[self.current_player].config(bg="white")  # Set the player frame to white
         self.players_cards_frames[last_player].config(bg="SkyBlue1")  # Set the previous player frame color to blue
 
-    # Set the state of  all of the buttons to disabled, for all players.
-    def setButtons_disabled(self):
-        pass
-
-    # Set the state of the buttons to enabled - except roll dice for the player in i position
-    def setButtons_enabled(self):
-        pass
-
-    # Set roll the dice button to enabled for the player in i position
-    def setRoll_dice_enabled(self):
-        pass
+    # Add the houses frames
+    # Add Houses and Hotel pictures!!!!!!
+    def addHouses_frames(self, square):
+        hnh = tk.Label(square.getFrame(), text=f'Hotel:{square.getHotel()}\n Houses:{square.getHouses()}',
+                       font=("Times", "10", "italic bold"), bg="DarkSeaGreen1")
+        hnh.place(relx=0.27, rely=0.27, relheight=0.45, relwidth=0.45)
 
     # When pressing on "Roll Dice" button, this command will start
     def roll_dice(self):
@@ -243,6 +248,8 @@ class Mygame(Board):
         self.setResults(f" {result1}               {result2} ")
         time.sleep(1)  # Update the result
         self.player_move(result1 + result2, result1 == result2)
+        self.buttonsStates(True, 1, 2, 3, 4)
+        self.buttonsStates(False, 0)
 
     # After the roll_dice method has ended, this method will start
     def player_move(self, moves, double):
@@ -263,25 +270,51 @@ class Mygame(Board):
             if square_num == 28:
                 self.money_transaction_current_player(400)
                 square_num = 0
+                self.buttonsStates(False, 1, 3)
             elif square_num > 28:
                 self.money_transaction_current_player(200)
                 square_num = square_num - 28
             elif square_num == 14 or square_num == 21:
                 self.players[self.current_player].addTurn()
+                self.buttonsStates(False, 1, 3)
                 if square_num == 21:
                     self.players[self.current_player].setJail(True)
                     square_num = 7
-            if self.squares[square_num].getOwned_buy():
-                self.money_transaction_current_player(self.squares[square_num].getFine_price())# Paying the fine price
-            self.locatePlayer(self.players[self.current_player], square_num)
-
+            if self.squares[square_num].getOwned_by():
+                self.money_transaction_current_player(-self.squares[square_num].getFine_price(),
+                                                      self.squares[square_num].getOwned_by())  # Paying the fine price
+                self.locatePlayer(self.players[self.current_player], square_num)
+                self.end_turn()
+            else:
+                self.locatePlayer(self.players[self.current_player], square_num)
 
     # Money transaction to current player
-    def money_transaction_current_player(self, money):
+    def money_transaction_current_player(self, money, player=None):
+        money = int(money)
+        if not self.moneyAvailability_current_player(money):
+            height = self.getScreen_height()
+            warning = tk.Label(self.getWindow(), text="You do'nt have enough money", font=(None, 16, 'bold'), fg="red")
+            warning.place(x=0.3 * height, y=0.3 * height, height=0.05 * height, width=0.1 * height)
+            warning.after(10000, warning.destroy)
+            return False
         self.players[self.current_player].moneyTransaction(money)
         self.players_frames_stringVar_details[self.current_player]. \
             set(f'Name: {self.players[self.current_player].getName()} '
                 f'Money: {self.players[self.current_player].getMoney()}')
+        if player is not None:  # Fine money transaction
+            player.moneyTransaction(-money)
+            owner_loc = None
+            for i in range(len(self.players)):
+                if self.players[i] == player:
+                    owner_loc = i
+                    break
+            self.players_frames_stringVar_details[owner_loc]. \
+                set(f'Name: {self.players[owner_loc].getName()} '
+                    f'Money: {self.players[owner_loc].getMoney()}')
+        return True
+
+    def moneyAvailability_current_player(self, money):
+        return self.players[self.current_player].getMoney() + money >= 0
 
     # When pressing on "Show Card" button, this command will start
     def show_card(self):
@@ -293,34 +326,51 @@ class Mygame(Board):
 
     # When pressing on "Buy" button, this command will start
     def buy(self):
-        if self.squares[self.players[self.current_player].getCurrent_square()].getOwned_by():
-            pass
-        else:  # Opening the payment option
-            height = self.getScreen_height()
-            houses_label = tk.Label(self.getBoard(), bg="DarkSeaGreen1",text="Houses:", font=("Times", "10", "bold"))
-            houses_label.place(x=0.22 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)  # Houses Label
-            houses_variable = tk.StringVar()
-            houses_variable.set(0)
-            houses_options = tk.OptionMenu(self.getWindow(), houses_variable, 0, 1, 2, 3, 4)  # Houses Options menu
-            houses_options.place(x=0.27 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)
-            hotel_label = tk.Label(self.getBoard(), bg="DarkSeaGreen1",text="Hotel", font=("Times", "10", "bold"))
-            hotel_label.place(x=0.32 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height) # Hotel Label
-            hotel_variable = tk.StringVar()
-            hotel_variable.set(0)
-            hotel_options = tk.OptionMenu(self.getWindow(), houses_variable, 0, 1)  # Houses Options menu
-            hotel_options.place(x=0.37 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)
-            buying_process_button = tk.Button(self.getBoard(), bg="white",
-                                              font=("Times", "10", "bold"), text="Buy Now", command=self.buyingProcess)
-            buying_process_button.place(x=0.45 * height, y=0.4 * height, height=0.05 * height, width=0.05 * height)
-            self.buy_widgets = [houses_label, houses_options, houses_variable, hotel_label, hotel_options,
-                                hotel_variable, buying_process_button]
+        height = self.getScreen_height()
+        houses_label = tk.Label(self.getBoard(), bg="DarkSeaGreen1", text="Houses:", font=("Times", "10", "bold"))
+        houses_label.place(x=0.22 * height, y=0.35 * height, height=0.05 * height,
+                           width=0.05 * height)  # Houses Label
+        houses_variable = tk.StringVar()
+        houses_variable.set(0)
+        houses_options = tk.OptionMenu(self.getWindow(), houses_variable, 0, 1, 2, 3, 4)  # Houses Options menu
+        houses_options.place(x=0.27 * height, y=0.35 * height, height=0.05 * height, width=0.05 * height)
+        hotel_label = tk.Label(self.getBoard(), bg="DarkSeaGreen1", text="Hotel", font=("Times", "10", "bold"))
+        hotel_label.place(x=0.32 * height, y=0.35 * height, height=0.05 * height, width=0.05 * height)  # Hotel Label
+        hotel_variable = tk.StringVar()
+        hotel_variable.set(0)
+        hotel_options = tk.OptionMenu(self.getWindow(), hotel_variable, 0, 1)  # Houses Options menu
+        hotel_options.place(x=0.37 * height, y=0.35 * height, height=0.05 * height, width=0.05 * height)
+        buying_process_button = tk.Button(self.getBoard(), bg="white",
+                                          font=("Times", "10", "bold"), text="Buy Now", command=self.buyingProcess)
+        buying_process_button.place(x=0.45 * height, y=0.35 * height, height=0.05 * height, width=0.05 * height)
+        self.buy_widgets = [houses_label, houses_options, houses_variable, hotel_label, hotel_options,
+                            hotel_variable, buying_process_button]
 
     # The buying process
     def buyingProcess(self):
-        hotel, houses = self.buy_widgets[2].get(), self.buy_widgets[5].get()
+        houses, hotel = self.buy_widgets[2].get(), self.buy_widgets[5].get()
+        total_price = 0
         if hotel:
-            if houses:
-                self.squares[self.players[self.current_player].getCurrent_square()]
+            total_price = self.squares[self.players[
+                self.current_player].getCurrent_square()].getBuying_or_fine_price(int(houses), 0, True)
+        if houses:
+            total_price = total_price + self.squares[self.players[self.current_player].getCurrent_square()]. \
+                getBuying_or_fine_price(int(hotel), 1, True)
+        if total_price > 0:  # If there are houses and hotels
+            if self.money_transaction_current_player(-total_price):  # Money transaction is possible and it is executed
+                self.squares[self.players[self.current_player].getCurrent_square()]. \
+                    setOwned_by(self.players[self.current_player])
+                self.squares[self.players[self.current_player].getCurrent_square()].setHouses(int(houses))
+                self.squares[self.players[self.current_player].getCurrent_square()].setHotel(int(hotel))
+                self.addHouses_frames(self.squares[self.players[self.current_player].getCurrent_square()])
+                card = self.squares[self.players[self.current_player].getCurrent_square()] \
+                    .card(self.players_cards_frames[self.current_player])
+                x = self.players[self.current_player].getNext_card_x()  # Updating the next card location
+                card.place(relx=x, rely=0)
+                for i in range(7):  # Destroy the buy_Widgets
+                    if i != 2 and i != 5:
+                        self.buy_widgets[i].destroy()
+                self.players[self.current_player].setNext_card_x(x + 0.25)
 
     # When player pressing on "Quit" button, this command will start
     def quit(self):
@@ -349,7 +399,8 @@ class Mygame(Board):
         self.current_player = next_player
         self.updateCurrent_player_frame_color(last_player)
         self.end_show_card()
-        self.buttons_()
+        self.buttonsStates(True, 0, 4)
+        self.buttonsStates(False, 1, 2, 3)
 
     # Create a label of the game winners
     def createWinners(self):
@@ -371,7 +422,6 @@ class Mygame(Board):
         self.in_turn = True
         self.in_game = True
         while self.in_game:
-            self.setRoll_dice_enabled()
             self.window.mainloop()
 
 

@@ -204,8 +204,8 @@ class Board(Displayable):
         street_and_price.place(relheight=0.125, relwidth=1, relx=x, rely=y + 0.125)
         self.squares[len(self.squares) - 1].setStreet(self.words[self.loc + 1])
         self.squares[len(self.squares) - 1].setLand_price(int(self.words[self.loc + 2]))
-        self.squares[len(self.squares) - 1].card()  # Creates the card for the square
         square_color = tk.Label(self.squares[len(self.squares) - 1].getFrame(), bg=self.words[self.loc + 3])
+        self.squares[len(self.squares) - 1].setColor(self.words[self.loc + 3])
         square_color.place(relheight=color_height, relwidth=color_width, relx=color_x, rely=color_y)
 
     # Square details of the up line

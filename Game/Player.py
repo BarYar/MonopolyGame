@@ -29,6 +29,7 @@ class Player(Houses, Character):
         self.streets = []
         self.current_square = 0
         self.color = None
+        self.nextCard_x = 0
         Houses.__init__(self)
         Character.__init__(self, None, None, character)
 
@@ -53,6 +54,10 @@ class Player(Houses, Character):
     def setColor(self, color):
         self.color = color
 
+    # Set the next card x
+    def setNext_card_x(self, x):
+        self.nextCard_x = x
+
     # Add a street to list of streets
     def addStreet(self, street):
         self.streets.append(street)
@@ -72,6 +77,10 @@ class Player(Houses, Character):
     # Get the money
     def getMoney(self):
         return self.money
+
+    # Get the next card x
+    def getNext_card_x(self):
+        return self.nextCard_x
 
     # Get the color
     # Until the character update
