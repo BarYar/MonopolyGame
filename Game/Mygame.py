@@ -416,7 +416,7 @@ class Mygame(Board):
         self.createWinners()
         pass
 
-    # Starts the game
+    # Start the game
     def startGame(self):
         self.newGame()
         self.in_turn = True
