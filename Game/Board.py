@@ -238,8 +238,6 @@ class Board(Displayable):
         self.squares[14:20] = fourteentwenty
         self.squares[21:27] = twentyonetwentyseven
 
-
-
     # Create the board squares
     def create_board(self):
         # Methods for creation of the board

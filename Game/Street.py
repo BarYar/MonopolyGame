@@ -140,7 +140,8 @@ class Street(Square):
     # buying[0]-list of all the houses buying price, buying [1] - buying price of the hotel.
     # fines[0]-list of all the houses fines price, buying [1] - fines price of the hotel.
     # The "father" window
-    def card(self, window):  # Update
+    # board - Boolean - for ratio
+    def card(self, window, board):  # Update
         city_and_street = f'{self.city} {self.street}'
         text_buying = f"Buying Prices:\nHotel:{int(self.getBuying_or_fine_price(1, 1, True))}₪\nHouses:"
         for i in range(1, 5):
@@ -149,12 +150,24 @@ class Street(Square):
         for i in range(1, 5):
             text_fines = f"{text_fines} {i}: {int(self.getBuying_or_fine_price(i, 0, False))}₪\n"
         height = self.getScreen_height()
-        card = tk.Frame(window, bg="white", height=height/3, width=height/6, highlightthickness=True)  # The card frame
-        tk.Label(card, bg=self.color).place(relheight=1/16, relwidth=1, relx=0, rely=0)  # The card color
-        tk.Label(card, bg="white", font=("Times", "13", "italic bold"), text=city_and_street)\
-            .place(relheight=1/26, relwidth=1, relx=0, rely=1/16)  # The card City and street
-        tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_buying) \
-            .place(relheight=21/64, relwidth=1, relx=0, rely=7/64)  # The card buying prices
-        tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_fines) \
-            .place(relheight=1/3, relwidth=1, relx=0, rely=12/32)  # The card fines prices
+        if board:
+            card = tk.Frame(window, bg="white", height=height*0.2, width=height*0.15,
+                            highlightthickness=True)  # The card frame
+            tk.Label(card, bg=self.color).place(relheight=1/16, relwidth=1, relx=0, rely=0)  # The card color
+            tk.Label(card, bg="white", font=("Times", "13", "italic bold"), text=city_and_street)\
+                .place(relheight=1/16, relwidth=1, relx=0, rely=1/16)  # The card City and street
+            tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_buying) \
+                .place(relheight=21/64, relwidth=1, relx=0, rely=9/64)  # The card buying prices
+            tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_fines) \
+                .place(relheight=1/3, relwidth=1, relx=0, rely=12/32)  # The card fines prices
+        else:
+            card = tk.Frame(window, bg="white", height=height/3, width=height/6,
+                            highlightthickness=True)  # The card frame
+            tk.Label(card, bg=self.color).place(relheight=1/16, relwidth=1, relx=0, rely=0)  # The card color
+            tk.Label(card, bg="white", font=("Times", "13", "italic bold"), text=city_and_street)\
+                .place(relheight=1/26, relwidth=1, relx=0, rely=1/16)  # The card City and street
+            tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_buying) \
+                .place(relheight=21/64, relwidth=1, relx=0, rely=7/64)  # The card buying prices
+            tk.Label(card, bg="white", font=("Times", "11", "italic"), text=text_fines) \
+                .place(relheight=1/3, relwidth=1, relx=0, rely=12/32)  # The card fines prices
         return card
