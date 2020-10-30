@@ -126,6 +126,7 @@ class Mygame(Board):
     # Change the button states the value is the button
     # state = 0 - Disabled, state = 1 - Enabled
     # enable = True - state= NORMAL,  enable = False - state= DISABLED
+    # *buttons_location: 0 - roll_dice, 1 - buy, 2 - end_turn, 3 - show_card, 4 - end_game
     def buttonsStates(self, enable, *buttons_location):
         if enable:
             for location in buttons_location:
@@ -330,19 +331,19 @@ class Mygame(Board):
                 self.money_transaction_current_player(-100)
         else:  # Street squares
             square_num = current_square + moves
-            if square_num == 28:
+            if square_num == 28:  # Go Square
                 self.money_transaction_current_player(400)
                 square_num = 0
-                self.buttonsStates(False, 1, 3)
+                self.buttonsStates(False, 0, 1, 3)
             elif square_num > 28:
                 self.money_transaction_current_player(200)
                 square_num = square_num - 28
-            elif square_num == 14 or square_num == 21:
+            elif square_num == 14 or square_num == 21:   # Free Parking and Jail Squares
                 self.players[self.current_player].addTurn()
-                self.buttonsStates(False, 1, 3)
                 if square_num == 21:
                     self.players[self.current_player].setJail(True)
                     square_num = 7
+                self.buttonsStates(False, 0, 1, 3)
             if self.squares[square_num].getOwned_by():
                 self.money_transaction_current_player(-self.squares[square_num].getFine_price(),
                                                       self.squares[square_num].getOwned_by())  # Paying the fine price
@@ -400,6 +401,7 @@ class Mygame(Board):
                     .card(self.players_cards_frames[self.current_player], False)
                 x = self.players[self.current_player].getNext_card_x()  # Updating the next card location
                 card.place(relx=x, rely=0)
+                self.buttonsStates(False, 0, 1, 3)
                 for i in range(7):  # Destroy the buy_Widgets
                     if i != 2 and i != 5:
                         self.buy_widgets[i].destroy()
